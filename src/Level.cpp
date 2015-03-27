@@ -34,6 +34,9 @@ void Level::draw(TransformPipeline& tp)
 	Mesh& sphere = *Registry::models["asteroid"];
 	ShaderProgram& shader = *Registry::shaders["test"];
 
+	Mesh &environmentCube = *Registry::models["environment_cube"];
+	ShaderProgram &cubemapShader = *Registry::shaders["cubemap"];
+
 	tp.identity();
 	shader.bind();
 	shader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
@@ -68,6 +71,21 @@ void Level::draw(TransformPipeline& tp)
 
 		sphere.drawInstanced(n);
 	}
+
+	tp.saveModel();
+	tp.identity();
+
+	cubemapShader.bind();
+	cubemapShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
+
+	samplerMipmap.bind(1);
+	Registry::cubemap->bind(1);
+
+	glDepthFunc(GL_LEQUAL);
+	environmentCube.draw();
+	glDepthFunc(GL_LESS);
+
+	tp.restoreModel();
 }
 
 

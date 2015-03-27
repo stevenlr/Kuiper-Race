@@ -3,15 +3,17 @@
 
 #include <map>
 
-class ShaderProgram;
-class Mesh;
-class Texture;
+#include "graphics/opengl/ShaderProgram.h"
+#include "graphics/Mesh.h"
+#include "graphics/opengl/Texture.h"
+#include "graphics/opengl/Cubemap.h"
 
 class Registry {
 public:
 	static std::map<std::string, ShaderProgram*> shaders;
 	static std::map<std::string, Mesh*> models;
 	static std::map<std::string, Texture*> textures;
+	static Cubemap *cubemap;
 };
 
 #endif

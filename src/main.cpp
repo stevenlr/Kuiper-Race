@@ -70,6 +70,32 @@ static void initialize()
 
 	Mesh *asteroid = loadCobjModel("models/asteroid.cobj");
 	Registry::models["asteroid"] = asteroid;
+
+	// ----- Cubemap -----
+
+	Cubemap *cubemap = loadPngCubemap({
+		"textures/stars.png",
+		"textures/stars.png",
+		"textures/stars.png",
+		"textures/stars.png",
+		"textures/sun.png",
+		"textures/stars.png"
+	}, true);
+	Registry::cubemap = cubemap;
+
+	Mesh *environmentCube = loadCobjModel("models/environment_cube.cobj");
+	Registry::models["environment_cube"] = environmentCube;
+
+	ShaderProgram *shaderCubemap = new ShaderProgram("shaders/cubemap.vert", "shaders/cubemap.frag");
+	shaderCubemap->bindAttribLocation("in_Position", 0);
+	shaderCubemap->bindFragDataLocation("out_Color", 0);
+	shaderCubemap->link();
+
+	shaderCubemap->bind();
+	(*shaderCubemap)["u_Cubemap"].set1i(1);
+	shaderCubemap->unbind();
+
+	Registry::shaders["cubemap"] = shaderCubemap;
 }
 
 static void update(float dt)

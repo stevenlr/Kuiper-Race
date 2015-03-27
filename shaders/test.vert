@@ -63,6 +63,6 @@ void main()
 	v_Normal = normalize(u_NormalMatrix * in_InstanceScale * mat3(rotationMatrix) * in_Normal);
 	v_Tangent = normalize((u_ViewModelMatrix * in_InstanceScale * rotationMatrix * vec4(in_Tangent, 0)).xyz);
 
-	v_LightDir = normalize((u_ViewMatrix * vec4(0, -1, -1, 0)).xyz);
+	v_LightDir = normalize((u_ViewMatrix * vec4(0, -1, 0, 0)).xyz);
 }
 
