@@ -1,0 +1,29 @@
+cmake_minimum_required(VERSION 2.6)
+ 
+project(KuiperRace)
+ 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -I/opt/X11/include")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLEW_STATIC")
+ 
+LINK_DIRECTORIES("~/local_install/lib")
+LINK_DIRECTORIES("/usr/local/lib")
+INCLUDE_DIRECTORIES("/usr/local/include")
+INCLUDE_DIRECTORIES("~/local_install/include")
+ 
+find_package(OpenGL)
+if (OPENGL_FOUND)
+   include_directories(${OPENGL_INCLUDE_DIR})
+else (OPENGL_FOUND)
+    message("OpenGL environment missing")
+endif (OPENGL_FOUND)
+set(GL_LIBRARIES ${OPENGL_LIBRARIES} GLEW)
+ 
+set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:$ENV{HOME}/local_install/lib/pkgconfig")
+FIND_PACKAGE( PkgConfig REQUIRED )
+PKG_SEARCH_MODULE( GLFW3 REQUIRED glfw3 )
+INCLUDE_DIRECTORIES( ${GLFW3_INCLUDE_DIR} )
+ 
+include_directories(include)
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+add_executable(KuiperRace ${SOURCES})
+target_link_libraries(KuiperRace ${GL_LIBRARIES} ${GLFW3_STATIC_LIBRARIES} z png)
