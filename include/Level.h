@@ -4,18 +4,23 @@
 #include <vector>
 
 #include "maths/Vector.h"
+#include "maths/TransformPipeline.h"
+
 #include "Segment.h"
 
 class Level {
-	std::vector<Segment> segments;
+	float time;
+	std::vector<Segment*> segments;
 
 public:
 	void generate();
+	void generate_test();
+
 	int getSegmentCount() const;
 	int getCurrentSegment() const;
 	Vector3 getCheckpoint(int i) const;
 
-	void draw();
+	void draw(TransformPipeline& tp);
 	void update(float dt);
 
 	bool isDead();

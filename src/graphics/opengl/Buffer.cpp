@@ -18,8 +18,10 @@ Buffer::~Buffer()
 	if (_bound)
 		unbind();
 
-	if (_id != 0)
+	if (_id != 0) {
 		glDeleteBuffers(1, &_id);
+		_id = 0;
+	}
 }
 
 void Buffer::data(GLsizeiptr size, const void *data)
