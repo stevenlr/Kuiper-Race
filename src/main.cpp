@@ -50,6 +50,8 @@ static void initialize()
 	ShaderProgram *shader = new ShaderProgram("shaders/test.vert", "shaders/test.frag");
 	shader->bindAttribLocation("in_Position", 0);
 	shader->bindAttribLocation("in_InstancePosition", 4);
+	shader->bindAttribLocation("in_InstanceScale", 5);
+	shader->bindAttribLocation("in_InstanceRotation", 6);
 	shader->bindFragDataLocation("out_Color", 0);
 	shader->link();
 	Registry::shaders["test"] = shader;

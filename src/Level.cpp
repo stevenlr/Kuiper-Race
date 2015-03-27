@@ -11,6 +11,9 @@
 
 void Level::generate_test()
 {
+	// simulate random timing for the asteroids' rotation
+	time = 1000 * ((float) rand()) / RAND_MAX;
+
 	segments.push_back(new Segment());
 	segments.push_back(new Segment());
 	segments.push_back(new Segment());

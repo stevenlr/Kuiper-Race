@@ -12,15 +12,15 @@ Segment::~Segment()
 void Segment::generate_test(Vector3 start, Vector3 end)
 {
 	float range = 30.f;
-	for (int i = 0; i < 500; ++i) {
+	for (int i = 0; i < 200; ++i) {
 		Asteroid ast;
 		ast.position = Vector3 {
 			sinf(rand()) * range,
 			sinf(rand()) * range,
 			sinf(rand()) * range
 		};
-		ast.scale = 1.f;
-		ast.rotation = Vector3();
+		ast.scale = 0.5 + 2 * ((float) rand()) / RAND_MAX;
+		ast.rotation = Vector3 { sinf(rand()), sinf(rand()), sinf(rand()) } / 7;
 		asteroids.push_back(ast);
 	}
 
