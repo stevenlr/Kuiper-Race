@@ -29,6 +29,9 @@
 #include "maths/MatrixFactory.h"
 #include "maths/TransformPipeline.h"
 
+#include "Level.h"
+#include "Spaceship.h"
+
 using namespace std;
 
 #define WINDOW_WIDTH 1280
@@ -73,7 +76,7 @@ void run(int argc, char *argv[])
 	}
 
 	glfwSwapInterval(1);
-	
+
 	// RUN
 
 	glfwDestroyWindow(window);
