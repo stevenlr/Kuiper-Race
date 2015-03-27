@@ -37,6 +37,9 @@ void Level::draw(TransformPipeline& tp)
 	tp.identity();
 	shader.bind();
 	shader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
+	shader["u_NormalMatrix"].setMatrix3(tp.getNormalMatrix());
+	shader["u_ViewModelMatrix"].setMatrix4(tp.getViewModelMatrix());
+	shader["u_ViewMatrix"].setMatrix4(tp.getViewMatrix());
 	shader["u_DiffuseTexture"].set1i(1);
 	shader["u_NormalTexture"].set1i(2);
 	shader["u_EmitTexture"].set1i(3);

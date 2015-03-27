@@ -43,12 +43,15 @@ static Spaceship spaceship;
 
 static void initialize()
 {
-	srand(time(nullptr));
+	srand(0);
 
 	level.generate_test();
 
 	ShaderProgram *shader = new ShaderProgram("shaders/test.vert", "shaders/test.frag");
 	shader->bindAttribLocation("in_Position", 0);
+	shader->bindAttribLocation("in_Normal", 1);
+	shader->bindAttribLocation("in_TextureCoords", 2);
+	shader->bindAttribLocation("in_Tangent", 3);
 	shader->bindAttribLocation("in_InstancePosition", 4);
 	shader->bindAttribLocation("in_InstanceScale", 5);
 	shader->bindAttribLocation("in_InstanceRotation", 6);
