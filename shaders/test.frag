@@ -15,7 +15,7 @@ uniform sampler2D u_SpecularTexture;
 
 vec3 computeNormal()
 {
-	vec3 normal = texture2D(u_NormalTexture, v_TextureCoords).rgb * 2 - 1;
+	vec3 normal = normalize(texture2D(u_NormalTexture, v_TextureCoords).rgb * 2 - 1);
 	vec3 bitangent = cross(v_Tangent, v_Normal);
 
 	return mat3(v_Tangent.x, v_Tangent.y, v_Tangent.z,
@@ -34,8 +34,9 @@ void main()
 
 	float specularIntensity = texture2D(u_SpecularTexture, v_TextureCoords).r;
 	const vec3 specularColor = vec3(1, 1, 1);
-	float specularFactor = pow(max(0, dot(reflect(-v_LightDir, normal), normalize(v_Position))), 16) * specularIntensity;
+	float specularFactor = pow(max(0, dot(reflect(-v_LightDir, normal), normalize(v_Position))), 8) * specularIntensity;
 
 	out_Color = vec4(diffuseColor * (diffuseFactor + ambientFactor) + specularFactor * specularColor, 1);
+	//out_Color = vec4(normal, 1);
 }
 

@@ -22,40 +22,46 @@ uniform mat4 u_ViewModelMatrix;
 uniform mat4 u_ViewMatrix;
 uniform float u_Time;
 
-mat3 computeRotationMatrix(vec3 angles)
+mat4 computeRotationMatrix(vec3 angles)
 {
 	vec3 s = sin(angles);
 	vec3 c = cos(angles);
+	mat4 mat = mat4(1);
 
-	mat3 mat = mat3(1);
-	mat *= mat3(
-		1, 0, 0,
-		0, c.x, s.x,
-		0, -s.x, c.x
+	mat *= mat4(
+		1, 0, 0, 0,
+		0, c.x, s.x, 0,
+		0, -s.x, c.x, 0,
+		0, 0, 0, 1
 	);
-	mat *= mat3(
-		c.y, 0, -s.y,
-		0, 1, 0,
-		s.y, 0, c.y
+
+	mat *= mat4(
+		c.y, 0, -s.y, 0,
+		0, 1, 0, 0,
+		s.y, 0, c.y, 0,
+		0, 0, 0, 1
 	);
-	mat *= mat3(
-		c.y, -s.y, 0,
-		s.y, c.y, 0,
-		0, 0, 1
+
+	mat *= mat4(
+		c.y, -s.y, 0, 0,
+		s.y, c.y, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
 	);
+
 	return mat;
 }
 
 void main()
 {
-	mat3 rotationMatrix = computeRotationMatrix(in_InstanceRotation * u_Time);
-	vec3 position = in_InstanceScale * rotationMatrix * in_Position + in_InstancePosition;
+	mat4 rotationMatrix = computeRotationMatrix(in_InstanceRotation * u_Time);
+	vec3 position = (in_InstanceScale * rotationMatrix * vec4(in_Position, 1)).xyz + in_InstancePosition;
 	gl_Position = u_PvmMatrix * vec4(position, 1);
 
 	v_Position = (u_ViewModelMatrix * vec4(position, 1)).xyz;
 	v_TextureCoords = in_TextureCoords;
-	v_Normal = normalize(u_NormalMatrix * in_InstanceScale * rotationMatrix * in_Normal);
-	v_Tangent = normalize((u_ViewModelMatrix * vec4(in_Tangent, 1)).xyz);
+	v_Normal = normalize(u_NormalMatrix * in_InstanceScale * mat3(rotationMatrix) * in_Normal);
+	v_Tangent = normalize((u_ViewModelMatrix * in_InstanceScale * rotationMatrix * vec4(in_Tangent, 0)).xyz);
 
 	v_LightDir = normalize((u_ViewMatrix * vec4(0, -1, -1, 0)).xyz);
 }
