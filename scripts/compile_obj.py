@@ -82,7 +82,7 @@ def make_buffer():
 
 def main(args):
 	if len(args) < 2:
-		print "Not enough arguments"
+		print("Not enough arguments")
 		return
 
 	input_filename = args[0]
