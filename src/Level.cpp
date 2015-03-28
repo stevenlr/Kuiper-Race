@@ -37,16 +37,15 @@ void Level::draw(TransformPipeline& tp)
 	Mesh &environmentCube = *Registry::models["environment_cube"];
 	ShaderProgram &cubemapShader = *Registry::shaders["cubemap"];
 
+	Mesh &planet = *Registry::models["planet"];
+	ShaderProgram &planetShader = *Registry::shaders["planet"];
+
 	tp.identity();
 	shader.bind();
 	shader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
 	shader["u_NormalMatrix"].setMatrix3(tp.getNormalMatrix());
 	shader["u_ViewModelMatrix"].setMatrix4(tp.getViewModelMatrix());
 	shader["u_ViewMatrix"].setMatrix4(tp.getViewMatrix());
-	shader["u_DiffuseTexture"].set1i(1);
-	shader["u_NormalTexture"].set1i(2);
-	shader["u_EmitTexture"].set1i(3);
-	shader["u_SpecularTexture"].set1i(4);
 	shader["u_Time"].set1f(time);
 
 	Registry::textures["asteroid-diffuse"]->bind(1);
@@ -85,6 +84,21 @@ void Level::draw(TransformPipeline& tp)
 	environmentCube.draw();
 	glDepthFunc(GL_LESS);
 
+	tp.restoreModel();
+
+	tp.saveModel();
+	tp.identity();
+	tp.translation(10000, -30000, -3000);
+	tp.scale(6000);
+	planetShader.bind();
+	samplerMipmap.bind(1);
+	Registry::textures["planet"]->bind(1);
+	planetShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
+	planetShader["u_NormalMatrix"].setMatrix3(tp.getNormalMatrix());
+	planetShader["u_ViewMatrix"].setMatrix4(tp.getViewMatrix());
+	planetShader["u_ViewModelMatrix"].setMatrix4(tp.getViewModelMatrix());
+	planet.draw();
+	planetShader.unbind();
 	tp.restoreModel();
 }
 

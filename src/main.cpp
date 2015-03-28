@@ -59,6 +59,13 @@ static void initialize()
 	shader->link();
 	Registry::shaders["test"] = shader;
 
+	shader->bind();
+	(*shader)["u_DiffuseTexture"].set1i(1);
+	(*shader)["u_NormalTexture"].set1i(2);
+	(*shader)["u_EmitTexture"].set1i(3);
+	(*shader)["u_SpecularTexture"].set1i(4);
+	shader->unbind();
+
 	Texture *asteroidDiffuse = loadPngTexture("textures/asteroid-diffuse.png", true);
 	Registry::textures["asteroid-diffuse"] = asteroidDiffuse;
 	Texture *asteroidEmit = loadPngTexture("textures/asteroid-emit.png", true);
@@ -96,6 +103,26 @@ static void initialize()
 	shaderCubemap->unbind();
 
 	Registry::shaders["cubemap"] = shaderCubemap;
+
+	// ----- Planet -----
+
+	Texture *planetTexture = loadPngTexture("textures/planet.png", true);
+	Registry::textures["planet"] = planetTexture;
+
+	Mesh *planetMesh = loadCobjModel("models/planet.cobj");
+	Registry::models["planet"] = planetMesh;
+
+	ShaderProgram *planetShader = new ShaderProgram("shaders/planet.vert", "shaders/planet.frag");
+	planetShader->bindAttribLocation("in_Position", 0);
+	planetShader->bindAttribLocation("in_Normal", 1);
+	planetShader->bindAttribLocation("in_TextureCoords", 2);
+	planetShader->bindFragDataLocation("out_Color", 0);
+	planetShader->link();
+	planetShader->bind();
+	(*planetShader)["u_Texture"].set1i(1);
+	planetShader->unbind();
+
+	Registry::shaders["planet"] = planetShader;
 }
 
 static void update(float dt)
@@ -162,7 +189,7 @@ static void run(int argc, char *argv[])
 	glClearColor(0, 0, 0, 1);
 
 	TransformPipeline tp;
-	tp.perspectiveProjection(70, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 10000);
+	tp.perspectiveProjection(70, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
 
 	initialize();
 

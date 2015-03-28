@@ -28,7 +28,7 @@ void main()
 	vec3 sunColor = vec3(1, 0.98, 0.88);
 	vec3 normal = computeNormal();
 
-	const float ambientFactor = 0.05;
+	const float ambientFactor = 0.0;
 
 	vec3 diffuseColor = texture(u_DiffuseTexture, v_TextureCoords).rgb;
 	float diffuseFactor = max(0, dot(-v_LightDir, normal)) * (1 - ambientFactor);
@@ -37,6 +37,16 @@ void main()
 	const vec3 specularColor = vec3(1, 1, 1);
 	float specularFactor = pow(max(0, dot(reflect(-v_LightDir, normal), normalize(v_Position))), 8) * specularIntensity;
 
-	out_Color = vec4(diffuseColor * (diffuseFactor + ambientFactor) * sunColor + specularFactor * specularColor, 1);
+	vec3 color1 = vec3(0.4, 0.6, 0.9);
+	vec3 color2 = vec3(0.7, 0.9, 0.2);
+	vec3 colorPlanet = (color1 + color2) / 2;
+
+	float diffuseFactor2 = max(0, dot(v_LightDir, normal)) * 0.1;
+
+	out_Color = vec4(
+		diffuseColor * (diffuseFactor + ambientFactor) * sunColor
+		+ specularFactor * specularColor
+		+ colorPlanet * diffuseFactor2 * diffuseColor
+	, 1);
 }
 
