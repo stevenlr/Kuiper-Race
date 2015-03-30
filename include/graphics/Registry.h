@@ -7,6 +7,7 @@
 #include "graphics/Mesh.h"
 #include "graphics/opengl/Texture.h"
 #include "graphics/opengl/Cubemap.h"
+#include "graphics/opengl/VertexArray.h"
 
 class Registry {
 public:
@@ -14,6 +15,7 @@ public:
 	static std::map<std::string, Mesh*> models;
 	static std::map<std::string, Texture*> textures;
 	static Cubemap *cubemap;
+	static VertexArray *screenQuad;
 };
 
 #endif

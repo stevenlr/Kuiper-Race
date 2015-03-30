@@ -123,6 +123,24 @@ static void initialize()
 	planetShader->unbind();
 
 	Registry::shaders["planet"] = planetShader;
+
+	// ----- Screen quad -----
+
+	float quadCoords[] = {0, 0, 1, 0, 1, 1, 0, 1};
+	unsigned int quadIndices[] = {0, 1, 3, 3, 1, 2};
+
+	VertexArray *quadVao = new VertexArray(VertexArray::Triangles, 6);
+
+	Buffer *quadCoordsBuffer = new Buffer(Buffer::Array, Buffer::StaticDraw);
+	quadCoordsBuffer->data(8 * sizeof(float), reinterpret_cast<const void*>(quadCoords));
+
+	Buffer *quadIndicesBuffer = new Buffer(Buffer::ElementArray, Buffer::StaticDraw);
+	quadIndicesBuffer->data(6 * sizeof(unsigned int), reinterpret_cast<const void*>(quadIndices));
+
+	quadVao->addAttrib(0, VertexAttrib(quadCoordsBuffer, 2, VertexAttrib::Float));
+	quadVao->setElementIndexArray(ElementIndexArray(quadIndicesBuffer));
+
+	Registry::screenQuad = quadVao;
 }
 
 static void update(float dt)
@@ -193,6 +211,29 @@ static void run(int argc, char *argv[])
 
 	initialize();
 
+	Texture gbufferDiffuse(WINDOW_WIDTH, WINDOW_HEIGHT, Texture::RGB32f, Texture::RGB, Texture::Float);
+	Texture gbufferDepth(WINDOW_WIDTH, WINDOW_HEIGHT, Texture::DepthComponent32f, Texture::Depth, Texture::Float);
+
+	Framebuffer framebuffer;
+	framebuffer.bind(Framebuffer::DrawFramebuffer);
+	framebuffer.attachTexture(gbufferDiffuse, Framebuffer::Color0);
+	framebuffer.attachTexture(gbufferDepth, Framebuffer::Depth);
+	framebuffer.drawBuffers({Framebuffer::Color0});
+	framebuffer.unbind(Framebuffer::DrawFramebuffer);
+
+	ShaderProgram postprocessShader("shaders/postprocess.vert", "shaders/postprocess.frag");
+	postprocessShader.bindAttribLocation("in_Position", 0);
+	postprocessShader.bindFragDataLocation("out_Color", 0);
+	postprocessShader.link();
+	postprocessShader.bind();
+	postprocessShader["u_Texture"].set1i(1);
+	postprocessShader["u_Depth"].set1i(2);
+	postprocessShader["u_Width"].set1f(WINDOW_WIDTH);
+	postprocessShader["u_Height"].set1f(WINDOW_HEIGHT);
+	postprocessShader.unbind();
+
+	Sampler samplerScreenquad(Sampler::MinLinear, Sampler::MagLinear, Sampler::ClampToEdge);
+
 	bool running = true;
 	while (running) {
 		input.poll();
@@ -202,8 +243,28 @@ static void run(int argc, char *argv[])
 
 		update(1 / 60.);
 
+		framebuffer.bind(Framebuffer::DrawFramebuffer);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		draw(tp);
+		framebuffer.unbind(Framebuffer::DrawFramebuffer);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glDisable(GL_CULL_FACE);
+
+		postprocessShader.bind();
+		postprocessShader["u_ViewMatrix"].setMatrix4(tp.getViewMatrix());
+		postprocessShader["u_ProjectionMatrix"].setMatrix4(tp.getProjectionMatrix());
+		samplerScreenquad.bind(1);
+		gbufferDiffuse.bind(1);
+		samplerScreenquad.bind(2);
+		gbufferDepth.bind(2);
+		Registry::screenQuad->bind();
+		Registry::screenQuad->drawElements();
+		Registry::screenQuad->unbind();
+		postprocessShader.unbind();
+
+		glEnable(GL_CULL_FACE);
+
 		glfwSwapBuffers(window);
 	}
 
