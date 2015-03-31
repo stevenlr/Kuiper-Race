@@ -158,11 +158,37 @@ bool Level::shipCollidesWithAsteroids()
 		currentSegmentIndex--;
 	}
 
+	for (int i = currentSegmentIndex - 1; i < currentSegmentIndex + 2; ++i) {
+		if (i < 0 || i >= segments.size()) {
+			continue;
+		}
+
+		Segment *seg = segments[i];
+		for (const Asteroid& ast : seg->getAsteroids()) {
+			const Vector3& asteroidPosition = ast.position;
+			float astDistX = ship.getPosition()[0] - asteroidPosition[0];
+			float astDistY = ship.getPosition()[1] - asteroidPosition[1];
+			float astDistZ = ship.getPosition()[2] - asteroidPosition[2];
+			float astMinDist = ship.getRadius() + ast.scale;
+			if (astDistX * astDistX + astDistY * astDistY + astDistZ * astDistZ <= astMinDist * astMinDist) {
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
 bool Level::shipCollidesWithCheckpoint()
 {
+	Segment* seg = segments[currentSegmentIndex];
+	float cpDistX = ship.getPosition()[0] - seg->getCheckpoint()[0];
+	float cpDistY = ship.getPosition()[1] - seg->getCheckpoint()[1];
+	float cpDistZ = ship.getPosition()[2] - seg->getCheckpoint()[2];
+	float cpMinDist = spaceship.getRadius() + CHECKPOINT_RADIUS;
+	if (cpDistX * cpDistX + cpDistY * cpDistY + cpDistZ * cpDistZ <= cpMinDist * cpMinDist) {
+		return true;
+	}
 	return false;
 }
 

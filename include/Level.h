@@ -10,6 +10,7 @@
 #include "Spaceship.h"
 
 #define MAX_TIME_PER_SEGMENT 12
+#define CHECKPOINT_RADIUS 5
 
 class Level {
 	Spaceship ship;
