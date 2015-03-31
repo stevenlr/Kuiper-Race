@@ -1,4 +1,4 @@
-#include <cstdlib>
+#include <random>
 
 #include "Segment.h"
 
