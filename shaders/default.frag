@@ -43,10 +43,13 @@ void main()
 
 	float diffuseFactor2 = max(0, dot(v_LightDir, normal)) * 0.1;
 
+	vec3 emit = texture(u_EmitTexture, v_TextureCoords).rgb;
+
 	out_Color = vec4(
 		diffuseColor * (diffuseFactor + ambientFactor) * sunColor
 		+ specularFactor * specularColor
 		+ colorPlanet * diffuseFactor2 * diffuseColor
+		+ emit
 	, 1);
 }
 

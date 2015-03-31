@@ -72,13 +72,18 @@ void Level::draw(TransformPipeline& tp)
 
 	static Sampler samplerMipmap(Sampler::MinLinearMipmapLinear, Sampler::MagLinear, Sampler::Repeat);
 	Mesh& sphere = *Registry::models["asteroid"];
-	ShaderProgram& shader = *Registry::shaders["test"];
+	ShaderProgram& shader = *Registry::shaders["asteroid"];
 
 	Mesh &environmentCube = *Registry::models["environment_cube"];
 	ShaderProgram &cubemapShader = *Registry::shaders["cubemap"];
 
 	Mesh &planet = *Registry::models["planet"];
 	ShaderProgram &planetShader = *Registry::shaders["planet"];
+
+	samplerMipmap.bind(1);
+	samplerMipmap.bind(2);
+	samplerMipmap.bind(3);
+	samplerMipmap.bind(4);
 
 	tp.identity();
 	shader.bind();
@@ -89,13 +94,9 @@ void Level::draw(TransformPipeline& tp)
 	shader["u_Time"].set1f(time);
 
 	Registry::textures["asteroid-diffuse"]->bind(1);
-	samplerMipmap.bind(1);
 	Registry::textures["asteroid-normal"]->bind(2);
-	samplerMipmap.bind(2);
 	Registry::textures["asteroid-emit"]->bind(3);
-	samplerMipmap.bind(3);
 	Registry::textures["asteroid-specular"]->bind(4);
-	samplerMipmap.bind(4);
 
 	for (int i = currentSegmentIndex - 1; i < currentSegmentIndex + 2; ++i) {
 		if (i < 0 || i >= segments.size()) {
@@ -115,6 +116,8 @@ void Level::draw(TransformPipeline& tp)
 
 		sphere.drawInstanced(n);
 	}
+
+	ship.draw(tp);
 
 	tp.saveModel();
 	tp.identity();
@@ -145,8 +148,6 @@ void Level::draw(TransformPipeline& tp)
 	planet.draw();
 	planetShader.unbind();
 	tp.restoreModel();
-
-	ship.draw(tp);
 }
 
 bool Level::shipCollidesWithAsteroids()

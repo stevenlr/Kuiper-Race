@@ -45,36 +45,30 @@ static void initialize()
 
 	level.generate_test();
 
-	ShaderProgram *shader = new ShaderProgram("shaders/test.vert", "shaders/test.frag");
-	shader->bindAttribLocation("in_Position", 0);
-	shader->bindAttribLocation("in_Normal", 1);
-	shader->bindAttribLocation("in_TextureCoords", 2);
-	shader->bindAttribLocation("in_Tangent", 3);
-	shader->bindAttribLocation("in_InstancePosition", 4);
-	shader->bindAttribLocation("in_InstanceScale", 5);
-	shader->bindAttribLocation("in_InstanceRotation", 6);
-	shader->bindFragDataLocation("out_Color", 0);
-	shader->link();
-	Registry::shaders["test"] = shader;
+	ShaderProgram *asteroidShader = new ShaderProgram("shaders/asteroid.vert", "shaders/default.frag");
+	asteroidShader->bindAttribLocation("in_Position", 0);
+	asteroidShader->bindAttribLocation("in_Normal", 1);
+	asteroidShader->bindAttribLocation("in_TextureCoords", 2);
+	asteroidShader->bindAttribLocation("in_Tangent", 3);
+	asteroidShader->bindAttribLocation("in_InstancePosition", 4);
+	asteroidShader->bindAttribLocation("in_InstanceScale", 5);
+	asteroidShader->bindAttribLocation("in_InstanceRotation", 6);
+	asteroidShader->bindFragDataLocation("out_Color", 0);
+	asteroidShader->link();
+	Registry::shaders["asteroid"] = asteroidShader;
 
-	shader->bind();
-	(*shader)["u_DiffuseTexture"].set1i(1);
-	(*shader)["u_NormalTexture"].set1i(2);
-	(*shader)["u_EmitTexture"].set1i(3);
-	(*shader)["u_SpecularTexture"].set1i(4);
-	shader->unbind();
+	asteroidShader->bind();
+	(*asteroidShader)["u_DiffuseTexture"].set1i(1);
+	(*asteroidShader)["u_NormalTexture"].set1i(2);
+	(*asteroidShader)["u_EmitTexture"].set1i(3);
+	(*asteroidShader)["u_SpecularTexture"].set1i(4);
+	asteroidShader->unbind();
 
-	Texture *asteroidDiffuse = loadPngTexture("textures/asteroid-diffuse.png", true);
-	Registry::textures["asteroid-diffuse"] = asteroidDiffuse;
-	Texture *asteroidEmit = loadPngTexture("textures/asteroid-emit.png", true);
-	Registry::textures["asteroid-emit"] = asteroidEmit;
-	Texture *asteroidNormal = loadPngTexture("textures/asteroid-normal.png", true);
-	Registry::textures["asteroid-normal"] = asteroidNormal;
-	Texture *asteroidSpecular = loadPngTexture("textures/asteroid-specular.png", true);
-	Registry::textures["asteroid-specular"] = asteroidSpecular;
-
-	Mesh *asteroid = loadCobjModel("models/asteroid.cobj");
-	Registry::models["asteroid"] = asteroid;
+	Registry::textures["asteroid-diffuse"] = loadPngTexture("textures/asteroid-diffuse.png", true);
+	Registry::textures["asteroid-emit"] = loadPngTexture("textures/asteroid-emit.png", true);
+	Registry::textures["asteroid-normal"] = loadPngTexture("textures/asteroid-normal.png", true);
+	Registry::textures["asteroid-specular"] = loadPngTexture("textures/asteroid-specular.png", true);
+	Registry::models["asteroid"] = loadCobjModel("models/asteroid.cobj");
 
 	// ----- Cubemap -----
 
@@ -88,8 +82,7 @@ static void initialize()
 	}, true);
 	Registry::cubemap = cubemap;
 
-	Mesh *environmentCube = loadCobjModel("models/environment_cube.cobj");
-	Registry::models["environment_cube"] = environmentCube;
+	Registry::models["environment_cube"] = loadCobjModel("models/environment_cube.cobj");
 
 	ShaderProgram *shaderCubemap = new ShaderProgram("shaders/cubemap.vert", "shaders/cubemap.frag");
 	shaderCubemap->bindAttribLocation("in_Position", 0);
@@ -104,11 +97,8 @@ static void initialize()
 
 	// ----- Planet -----
 
-	Texture *planetTexture = loadPngTexture("textures/planet.png", true);
-	Registry::textures["planet"] = planetTexture;
-
-	Mesh *planetMesh = loadCobjModel("models/planet.cobj");
-	Registry::models["planet"] = planetMesh;
+	Registry::textures["planet"] = loadPngTexture("textures/planet.png", true);
+	Registry::models["planet"] = loadCobjModel("models/planet.cobj");
 
 	ShaderProgram *planetShader = new ShaderProgram("shaders/planet.vert", "shaders/planet.frag");
 	planetShader->bindAttribLocation("in_Position", 0);
@@ -139,6 +129,30 @@ static void initialize()
 	quadVao->setElementIndexArray(ElementIndexArray(quadIndicesBuffer));
 
 	Registry::screenQuad = quadVao;
+
+	// ----- Spaceship -----
+
+	Registry::textures["ship-diffuse"] = loadPngTexture("textures/ship-diffuse.png", true);
+	Registry::textures["ship-emit"] = loadPngTexture("textures/ship-emit.png", true);
+	Registry::textures["ship-normal"] = loadPngTexture("textures/ship-normal.png", true);
+	Registry::textures["ship-specular"] = loadPngTexture("textures/ship-specular.png", true);
+	Registry::models["ship"] = loadCobjModel("models/ship.cobj");
+
+	ShaderProgram *shipShader = new ShaderProgram("shaders/ship.vert", "shaders/default.frag");
+	shipShader->bindAttribLocation("in_Position", 0);
+	shipShader->bindAttribLocation("in_Normal", 1);
+	shipShader->bindAttribLocation("in_TextureCoords", 2);
+	shipShader->bindAttribLocation("in_Tangent", 3);
+	shipShader->bindFragDataLocation("out_Color", 0);
+	shipShader->link();
+	Registry::shaders["ship"] = shipShader;
+
+	shipShader->bind();
+	(*shipShader)["u_DiffuseTexture"].set1i(1);
+	(*shipShader)["u_NormalTexture"].set1i(2);
+	(*shipShader)["u_EmitTexture"].set1i(3);
+	(*shipShader)["u_SpecularTexture"].set1i(4);
+	shipShader->unbind();
 }
 
 static void update(float dt)
