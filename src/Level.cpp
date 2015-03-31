@@ -1,10 +1,12 @@
 #include <cstdlib>
+#include <algorithm>
 
 #include "Logger.h"
 #include "InputHandler.h"
 
 #include "graphics/Registry.h"
 #include "graphics/Mesh.h"
+#include "graphics/Rectangle.h"
 
 #include "graphics/opengl/ShaderProgram.h"
 #include "graphics/opengl/VertexAttrib.h"
@@ -44,7 +46,7 @@ void Level::update(float dt)
 	}
 
 	time += dt;
-	currentSegmentTime += dt;
+	currentSegmentTime = std::min(currentSegmentTime + dt, MAX_TIME_PER_SEGMENT);
 
 	if (currentSegmentTime >= MAX_TIME_PER_SEGMENT) {
 		LOGINFO << "timeout" << std::endl;
@@ -148,6 +150,29 @@ void Level::draw(TransformPipeline& tp)
 	planet.draw();
 	planetShader.unbind();
 	tp.restoreModel();
+}
+
+void Level::drawHUD()
+{
+	float ratio = 1 - currentSegmentTime / MAX_TIME_PER_SEGMENT;
+	float width = 1.f / 3;
+	float height = 1.f / 30;
+	float borderx = 3.f / 1280;
+	float bordery = 3.f / 720;
+	float x = 0.5 - width / 2;
+	float y = 0.95;
+	static Rectangle rectOut(x, y, width, height, .2, .2, .2);
+	static Rectangle rectIn(-1, -1, -1, -1, .9, .0, .0);
+	rectIn.setBounds(x + borderx, y + bordery, ratio * (width - 2 * borderx), height - 2 * bordery);
+
+	Registry::shaders["overlay"]->bind();
+	rectOut.draw();
+	if (ratio > 0.5f
+		|| (ratio > 0.3f && (int) (time * 5) % 4 != 0)
+		|| (ratio <= 0.3f && (int) (time * 5) % 2 != 0)) {
+		rectIn.draw();
+	}
+	Registry::shaders["overlay"]->unbind();
 }
 
 bool Level::shipCollidesWithAsteroids()

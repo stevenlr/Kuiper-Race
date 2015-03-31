@@ -153,6 +153,14 @@ static void initialize()
 	(*shipShader)["u_EmitTexture"].set1i(3);
 	(*shipShader)["u_SpecularTexture"].set1i(4);
 	shipShader->unbind();
+
+	// ----- Overlay -----
+
+	ShaderProgram *overlayShader = new ShaderProgram("shaders/overlay.vert", "shaders/overlay.frag");
+	overlayShader->bindAttribLocation("in_Position", 0);
+	overlayShader->bindFragDataLocation("out_Color", 0);
+	overlayShader->link();
+	Registry::shaders["overlay"] = overlayShader;
 }
 
 static void update(float dt)
@@ -268,6 +276,9 @@ static void run(int argc, char *argv[])
 		Registry::screenQuad->unbind();
 		postprocessShader.unbind();
 
+		glDisable(GL_DEPTH_TEST);
+		level.drawHUD();
+		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 
 		glfwSwapBuffers(window);

@@ -9,8 +9,8 @@
 #include "Segment.h"
 #include "Spaceship.h"
 
-#define MAX_TIME_PER_SEGMENT 12
-#define CHECKPOINT_RADIUS 5
+#define MAX_TIME_PER_SEGMENT 12.f
+#define CHECKPOINT_RADIUS 5.f
 
 class Level {
 	Spaceship ship;
@@ -32,6 +32,7 @@ public:
 	Vector3 getCheckpoint(int i) const;
 
 	void draw(TransformPipeline& tp);
+	void drawHUD();
 	void update(float dt);
 
 	bool shipCollidesWithAsteroids();
