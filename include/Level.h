@@ -12,6 +12,8 @@
 #define MAX_TIME_PER_SEGMENT 12.f
 #define CHECKPOINT_RADIUS 5.f
 
+#define SEGMENT_NBR 8
+
 class Level {
 	Spaceship ship;
 	std::vector<Segment*> segments;
@@ -21,8 +23,13 @@ class Level {
 	bool dead;
 	bool win;
 
+	void generateRandomDirection(Vector3 & direction) const;
+	void generateTurn(Vector3 & direction) const;
+
 public:
-	Level();
+
+  Level();
+  ~Level();
 
 	void generate();
 	void generate_test();

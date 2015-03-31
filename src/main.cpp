@@ -42,8 +42,9 @@ static Level level;
 static void initialize()
 {
 	srand(0);
+	//srand(time(nullptr));
 
-	level.generate_test();
+	level.generate();
 
 	ShaderProgram *asteroidShader = new ShaderProgram("shaders/asteroid.vert", "shaders/default.frag");
 	asteroidShader->bindAttribLocation("in_Position", 0);

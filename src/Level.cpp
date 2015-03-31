@@ -13,6 +13,7 @@
 #include "graphics/opengl/Sampler.h"
 
 #include "Level.h"
+#include <utility.h>
 
 Level::Level() :
 	currentSegmentIndex(0),
@@ -21,6 +22,60 @@ Level::Level() :
 	dead(false),
 	win(false)
 {
+  segments.resize(SEGMENT_NBR);
+}
+
+Level::~Level()
+{
+  for (Segment* seg : segments) {
+    delete seg;
+  }
+  segments.clear();
+}
+
+void Level::generateRandomDirection(Vector3 & direction) const
+{
+  for(unsigned char i=0; i<3; ++i)
+    direction[i]=Utility::generateMinus1_1Value();
+
+  direction.normalize();
+  direction*= SEGMENT_LENGTH;
+}
+
+void Level::generateTurn(Vector3 & direction) const
+{
+  float angle = Utility::generateMinus1_1Value() * M_PI_2;
+  Vector3 newDirection;
+
+  newDirection[0]=direction[0]*std::cos(angle) - direction[1]*sin(angle);
+  newDirection[1]=direction[0]*std::sin(angle) + direction[1]*cos(angle);
+
+  angle = Utility::generateMinus1_1Value() * M_PI_2;
+  direction[0]=newDirection[0];
+  direction[1]=newDirection[1]*std::cos(angle) - newDirection[2]*sin(angle);
+  direction[2]=newDirection[1]*std::sin(angle) + newDirection[2]*cos(angle);
+
+}
+
+void Level::generate()
+{
+  Vector3 currentPosition,
+          currentDirection;
+
+  generateRandomDirection(currentDirection);
+
+  for(int i=0; i<SEGMENT_NBR; ++i)
+  {
+    segments[i]=new Segment;
+    segments[i]->generate(currentPosition, currentPosition+currentDirection);
+    currentPosition+=currentDirection;
+    generateTurn(currentDirection);
+  }
+}
+
+int Level::getSegmentCount() const
+{
+  return segments.size();
 }
 
 void Level::generate_test()
