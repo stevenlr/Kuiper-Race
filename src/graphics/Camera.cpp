@@ -19,7 +19,7 @@ void Camera::update()
 {
 	InputHandler &input = InputHandler::getInstance();
 	const float sensitivity = 0.001f;
-	const float speed = 2.0f;
+	const float speed = 0.5f;
 	const float vangleLimit = (PI / 2) - 0.01f;
 
 	float dx, dy;

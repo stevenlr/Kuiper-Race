@@ -211,7 +211,7 @@ static void run(int argc, char *argv[])
 
 	initialize();
 
-	Texture gbufferDiffuse(WINDOW_WIDTH, WINDOW_HEIGHT, Texture::RGB32f, Texture::RGB, Texture::Float);
+	Texture gbufferDiffuse(WINDOW_WIDTH, WINDOW_HEIGHT, Texture::RGBA8, Texture::RGB, Texture::UnsignedByte);
 	Texture gbufferDepth(WINDOW_WIDTH, WINDOW_HEIGHT, Texture::DepthComponent32f, Texture::Depth, Texture::Float);
 
 	Framebuffer framebuffer;
