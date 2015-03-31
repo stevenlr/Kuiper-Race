@@ -30,6 +30,11 @@ void Segment::generate_test(Vector3 start, Vector3 end)
 				reinterpret_cast<const void*>(&asteroids[0]));
 }
 
+Vector3 Segment::getCheckpoint() const
+{
+	return Vector3();
+}
+
 const std::vector<Asteroid>& Segment::getAsteroids() const
 {
 	return asteroids;

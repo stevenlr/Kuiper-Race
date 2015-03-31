@@ -185,7 +185,7 @@ bool Level::shipCollidesWithCheckpoint()
 	float cpDistX = ship.getPosition()[0] - seg->getCheckpoint()[0];
 	float cpDistY = ship.getPosition()[1] - seg->getCheckpoint()[1];
 	float cpDistZ = ship.getPosition()[2] - seg->getCheckpoint()[2];
-	float cpMinDist = spaceship.getRadius() + CHECKPOINT_RADIUS;
+	float cpMinDist = ship.getRadius() + CHECKPOINT_RADIUS;
 	if (cpDistX * cpDistX + cpDistY * cpDistY + cpDistZ * cpDistZ <= cpMinDist * cpMinDist) {
 		return true;
 	}
