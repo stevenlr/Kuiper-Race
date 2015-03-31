@@ -1,6 +1,8 @@
 #ifndef SEGMENT_H
 #define SEGMENT_H
 
+#include <vector>
+
 #include "maths/Vector.h"
 
 #include "graphics/opengl/Buffer.h"
