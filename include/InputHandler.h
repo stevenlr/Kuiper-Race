@@ -3,7 +3,7 @@
 
 #include <map>
 
-#include <GLFW/glfw3.h>
+class GLFWwindow;
 
 class InputHandler {
 public:
@@ -15,6 +15,8 @@ public:
 		Up,
 		Down,
 		Quit,
+		SpeedUp,
+		SpeedDown,
 
 		KEY_NB_ITEMS
 	};

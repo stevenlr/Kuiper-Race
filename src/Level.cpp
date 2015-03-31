@@ -1,4 +1,7 @@
+#include <cstdlib>
+
 #include "Logger.h"
+#include "InputHandler.h"
 
 #include "graphics/Registry.h"
 #include "graphics/Mesh.h"
@@ -9,27 +12,64 @@
 
 #include "Level.h"
 
+Level::Level() :
+	currentSegmentIndex(0),
+	currentSegmentTime(0),
+	time(1000 * ((float) rand()) / RAND_MAX),
+	dead(false),
+	win(false)
+{
+}
+
 void Level::generate_test()
 {
-	// simulate random timing for the asteroids' rotation
-	time = 1000 * ((float) rand()) / RAND_MAX;
-
+	segments.push_back(new Segment());
+	segments.push_back(new Segment());
+	segments.push_back(new Segment());
 	segments.push_back(new Segment());
 	segments.push_back(new Segment());
 	segments.push_back(new Segment());
 
+	float i = 0;
 	for (Segment *seg : segments) {
-		seg->generate_test(Vector3(), Vector3());
+		seg->generate_test(Vector3 {i * 50, 0, 0}, Vector3());
+		i++;
 	}
 }
 
 void Level::update(float dt)
 {
+	if (win || dead) {
+		return;
+	}
+
 	time += dt;
+	currentSegmentTime += dt;
+
+	if (currentSegmentTime >= MAX_TIME_PER_SEGMENT) {
+		LOGINFO << "timeout" << std::endl;
+		die();
+		return;
+	}
+
+	ship.update(dt);
+
+	if (shipCollidesWithAsteroids()) {
+		LOGINFO << "collision with asteroid" << std::endl;
+		die();
+		return;
+	}
+
+	if (shipCollidesWithCheckpoint()) {
+		LOGINFO << "checkpoint reached" << std::endl;
+		reachCheckpoint();
+	}
 }
 
 void Level::draw(TransformPipeline& tp)
 {
+	ship.applyLookAt(tp);
+
 	static Sampler samplerMipmap(Sampler::MinLinearMipmapLinear, Sampler::MagLinear, Sampler::Repeat);
 	Mesh& sphere = *Registry::models["asteroid"];
 	ShaderProgram& shader = *Registry::shaders["test"];
@@ -57,7 +97,12 @@ void Level::draw(TransformPipeline& tp)
 	Registry::textures["asteroid-specular"]->bind(4);
 	samplerMipmap.bind(4);
 
-	for (Segment *seg : segments) {
+	for (int i = currentSegmentIndex - 1; i < currentSegmentIndex + 2; ++i) {
+		if (i < 0 || i >= segments.size()) {
+			continue;
+		}
+
+		Segment *seg = segments[i];
 		int n = seg->getAsteroids().size();
 		Buffer& buffer = seg->getDataBuffer();
 
@@ -100,6 +145,50 @@ void Level::draw(TransformPipeline& tp)
 	planet.draw();
 	planetShader.unbind();
 	tp.restoreModel();
+
+	ship.draw(tp);
 }
 
+bool Level::shipCollidesWithAsteroids()
+{
+	InputHandler &input = InputHandler::getInstance();
+	if (input.keyWasPressed(InputHandler::SpeedDown)) {
+		reachCheckpoint();
+	} else if (input.keyWasPressed(InputHandler::SpeedUp)) {
+		currentSegmentIndex--;
+	}
 
+	return false;
+}
+
+bool Level::shipCollidesWithCheckpoint()
+{
+	return false;
+}
+
+void Level::die()
+{
+	dead = true;
+}
+
+void Level::reachCheckpoint()
+{
+	if (currentSegmentIndex == segments.size()) {
+		win = true;
+		LOGINFO << "won" << std::endl;
+	} else {
+		currentSegmentIndex += 1;
+		currentSegmentTime = 0;
+		LOGINFO << "next segment" << std::endl;
+	}
+}
+
+bool Level::isDead() const
+{
+	return dead;
+}
+
+bool Level::isWin() const
+{
+	return win;
+}

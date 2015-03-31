@@ -7,12 +7,22 @@
 #include "maths/TransformPipeline.h"
 
 #include "Segment.h"
+#include "Spaceship.h"
+
+#define MAX_TIME_PER_SEGMENT 12
 
 class Level {
-	float time;
+	Spaceship ship;
 	std::vector<Segment*> segments;
+	int currentSegmentIndex;
+	float currentSegmentTime;
+	float time;
+	bool dead;
+	bool win;
 
 public:
+	Level();
+
 	void generate();
 	void generate_test();
 
@@ -23,8 +33,14 @@ public:
 	void draw(TransformPipeline& tp);
 	void update(float dt);
 
-	bool isDead();
+	bool shipCollidesWithAsteroids();
+	bool shipCollidesWithCheckpoint();
+
+	void die();
 	void reachCheckpoint();
+
+	bool isDead() const;
+	bool isWin() const;
 };
 
 #endif

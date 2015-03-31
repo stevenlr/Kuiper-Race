@@ -31,7 +31,6 @@
 #include "maths/TransformPipeline.h"
 
 #include "Level.h"
-#include "Spaceship.h"
 
 using namespace std;
 
@@ -39,7 +38,6 @@ using namespace std;
 #define WINDOW_HEIGHT 720
 
 static Level level;
-static Spaceship spaceship;
 
 static void initialize()
 {
@@ -146,22 +144,15 @@ static void initialize()
 static void update(float dt)
 {
 	level.update(dt);
-	//spaceship.update();
 }
 
 static void draw(TransformPipeline& tp)
 {
-	static Camera camera({-3, 0.5, 0.5});
-
-	camera.update();
-	tp.lookAt(camera);
-
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
 	level.draw(tp);
-	//spaceship.draw();
 }
 
 static void run(int argc, char *argv[])
