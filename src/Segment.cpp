@@ -32,7 +32,7 @@ void Segment::generate_test(Vector3 start, Vector3 end)
 
 Vector3 Segment::getCheckpoint() const
 {
-	return Vector3();
+	return Vector3{100, 0, 0};
 }
 
 const std::vector<Asteroid>& Segment::getAsteroids() const
