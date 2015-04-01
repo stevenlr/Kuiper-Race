@@ -73,28 +73,6 @@ void ShaderProgram::bind() const
 	if (!_linked)
 		throw runtime_error("Binding an unlinked program.");
 
-#ifndef NDEBUG
-	GLint success;
-
-	glValidateProgram(_id);
-	glGetProgramiv(_id, GL_VALIDATE_STATUS, &success);
-
-	if (success == GL_FALSE) {
-		GLint length;
-
-		glGetProgramiv(_id, GL_INFO_LOG_LENGTH, &length);
-
-		GLchar *log = new GLchar[length];
-
-		glGetProgramInfoLog(_id, length, nullptr, log);
-		LOGERROR << "Couldn't validate program (" << _vFile << ", " << _fFile << ") : "
-			<< endl << log << endl;
-		delete[] log;
-
-		throw runtime_error("Error when validating program. See logs.");
-	}
-#endif
-
 	if (_boundProgram != _id) {
 		glUseProgram(_id);
 		_boundProgram = _id;

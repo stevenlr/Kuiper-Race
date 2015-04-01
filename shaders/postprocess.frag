@@ -13,7 +13,7 @@ out vec4 out_Color;
 
 void main()
 {
-	float depth = texture2D(u_Depth, v_Position).r;
+	float depth = texture(u_Depth, v_Position).r;
 	vec3 color = vec3(0);
 	vec2 posCenter = v_Position * 2 - 1;
 	float dist = length(posCenter);
@@ -51,7 +51,7 @@ void main()
 		for (int i = 0; i < iterations; ++i) {
 			vec2 pos = start + pas * i;
 
-			c += texture2D(u_Texture, (pos + 1) / 2).rgb / iterations;
+			c += texture(u_Texture, (pos + 1) / 2).rgb / iterations;
 		}
 
 		color += c * 0.4 * sunFactor;
