@@ -20,9 +20,9 @@ Spaceship::Spaceship() :
 
 void Spaceship::update(float dt)
 {
-	static const float acceleration = 120;
-	static const float rotationAccelerationY = 20;
-	static const float rotationAccelerationX = 20;
+	static const float acceleration = 50;
+	static const float rotationAccelerationY = 4;
+	static const float rotationAccelerationX = 4;
 	InputHandler &input = InputHandler::getInstance();
 
 	speed *= 0.96; // Friction in space, suuuure...
@@ -35,8 +35,8 @@ void Spaceship::update(float dt)
 		speed -= dt * acceleration;
 	}
 
-	rotationSpeedY *= 0.7;
-	rotationSpeedX *= 0.7;
+	rotationSpeedY *= 0.94;
+	rotationSpeedX *= 0.94;
 
 	if (input.keyIsDown(InputHandler::Left)) {
 		rotationSpeedY += dt * rotationAccelerationY;
@@ -81,6 +81,7 @@ void Spaceship::draw(TransformPipeline& tp)
 	tp.identity();
 
 	tp.translation(position);
+	applyModelMatrix(tp);
 
 	samplerMipmap.bind(1);
 	samplerMipmap.bind(2);
@@ -105,12 +106,25 @@ void Spaceship::draw(TransformPipeline& tp)
 void Spaceship::applyLookAt(TransformPipeline& tp)
 {
 	static const float offsetForward = -7;
-	static const float offsetUpward = 2;
+	static const float offsetUpward = 1;
 
 	Vector3 cameraPosition = position + forward * offsetForward + up * offsetUpward;
 	Vector3 centerPosition = position + up * 1;
 
 	tp.lookAt(cameraPosition, centerPosition, up);
+}
+
+void Spaceship::applyModelMatrix(TransformPipeline& tp)
+{
+	Matrix4 m;
+
+	for (int i = 0; i < 3; ++i) {
+		m(i, 0) = right[i];
+		m(i, 1) = forward[i];
+		m(i, 2) = up[i];
+	}
+
+	tp.setModel(tp.getModelMatrix() * m);
 }
 
 const Vector3& Spaceship::getPosition() const

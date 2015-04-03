@@ -131,6 +131,12 @@ void TransformPipeline::restoreModel()
 	_isDirty = true;
 }
 
+void TransformPipeline::setModel(const Matrix4 &newModel)
+{
+	*_model = newModel;
+	_isDirty = true;
+}
+
 const Matrix4 &TransformPipeline::getProjectionMatrix() const
 {
 	return _projection;

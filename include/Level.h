@@ -28,8 +28,8 @@ class Level {
 
 public:
 
-  Level();
-  ~Level();
+	Level();
+	~Level();
 
 	void generate();
 	void generate_test();

@@ -112,8 +112,8 @@ void Level::update(float dt)
 
 	if (shipCollidesWithAsteroids()) {
 		LOGINFO << "collision with asteroid" << std::endl;
-		//die();
-		//return;
+		die();
+		return;
 	}
 
 	if (shipCollidesWithCheckpoint()) {

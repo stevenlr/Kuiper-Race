@@ -40,6 +40,7 @@ public:
 
 	void saveModel();
 	void restoreModel();
+	void setModel(const Matrix4 &newModel);
 
 	const Matrix4 &getProjectionMatrix() const;
 	const Matrix4 &getViewMatrix() const;

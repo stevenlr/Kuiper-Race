@@ -18,9 +18,10 @@ class Spaceship {
 public:
 	Spaceship();
 
-	void draw(TransformPipeline&);
+	void draw(TransformPipeline& tp);
 	void update(float dt);
-	void applyLookAt(TransformPipeline&);
+	void applyLookAt(TransformPipeline& tp);
+	void applyModelMatrix(TransformPipeline& tp);
 
 	const Vector3& getPosition() const;
 	Vector3 getSpeed() const;
