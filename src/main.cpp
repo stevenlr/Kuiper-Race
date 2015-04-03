@@ -177,6 +177,8 @@ static void initialize()
 	checkpointShader->bindFragDataLocation("out_Color", 0);
 	checkpointShader->link();
 	Registry::shaders["checkpoint"] = checkpointShader;
+
+	Registry::models["checkpoint"] = loadCobjModel("models/checkpoint.cobj");
 }
 
 static void update(float dt)

@@ -9,9 +9,9 @@
 
 #include "Asteroid.h"
 
-#define SEGMENT_LENGTH 9000
+#define SEGMENT_LENGTH 10000
 #define SEGMENT_HALF_WIDTH 2000
-#define ASTEROID_NBR 320
+#define ASTEROID_NBR 300
 
 class Segment {
 	std::vector<Asteroid> asteroids;

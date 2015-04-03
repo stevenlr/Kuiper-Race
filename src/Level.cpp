@@ -163,7 +163,6 @@ void Level::draw(TransformPipeline& tp)
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthFunc(GL_ALWAYS);
 	ShaderProgram &checkpointShader = *Registry::shaders["checkpoint"];
 	checkpointShader.bind();
 	checkpointShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
@@ -171,9 +170,16 @@ void Level::draw(TransformPipeline& tp)
 	/*Registry::point->bind();
 	Registry::point->drawArrays();
 	Registry::point->unbind();*/
-	Registry::models["planet"]->draw();
-	checkpointShader.unbind();
+
+	glDepthFunc(GL_ALWAYS);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	Registry::models["checkpoint"]->draw();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDepthFunc(GL_LESS);
+
+	Registry::models["checkpoint"]->draw();
+
+	checkpointShader.unbind();
 	glDisable(GL_BLEND);
 	
 	tp.restoreModel();
