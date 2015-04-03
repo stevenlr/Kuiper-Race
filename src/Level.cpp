@@ -4,6 +4,8 @@
 #include "Logger.h"
 #include "InputHandler.h"
 
+#include "maths/MathsConsts.h"
+
 #include "graphics/Registry.h"
 #include "graphics/Mesh.h"
 #include "graphics/Rectangle.h"
@@ -44,13 +46,13 @@ void Level::generateRandomDirection(Vector3 & direction) const
 
 void Level::generateTurn(Vector3 & direction) const
 {
-  float angle = Utility::generateMinus1_1Value() * M_PI_2;
+  float angle = Utility::generateMinus1_1Value() * PI / 2;
   Vector3 newDirection;
 
   newDirection[0]=direction[0]*std::cos(angle) - direction[1]*sin(angle);
   newDirection[1]=direction[0]*std::sin(angle) + direction[1]*cos(angle);
 
-  angle = Utility::generateMinus1_1Value() * M_PI_2;
+  angle = Utility::generateMinus1_1Value() * PI / 2;
   direction[0]=newDirection[0];
   direction[1]=newDirection[1]*std::cos(angle) - newDirection[2]*sin(angle);
   direction[2]=newDirection[1]*std::sin(angle) + newDirection[2]*cos(angle);
