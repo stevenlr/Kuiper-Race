@@ -21,8 +21,8 @@ Spaceship::Spaceship() :
 void Spaceship::update(float dt)
 {
 	static const float acceleration = 50;
-	static const float rotationAccelerationY = 4;
-	static const float rotationAccelerationX = 4;
+	static const float rotationAccelerationY = 5;
+	static const float rotationAccelerationX = 5;
 	InputHandler &input = InputHandler::getInstance();
 
 	speed *= 0.96; // Friction in space, suuuure...
@@ -35,8 +35,8 @@ void Spaceship::update(float dt)
 		speed -= dt * acceleration;
 	}
 
-	rotationSpeedY *= 0.94;
-	rotationSpeedX *= 0.94;
+	rotationSpeedY *= 0.95;
+	rotationSpeedX *= 0.95;
 
 	if (input.keyIsDown(InputHandler::Left)) {
 		rotationSpeedY += dt * rotationAccelerationY;

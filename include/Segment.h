@@ -9,9 +9,9 @@
 
 #include "Asteroid.h"
 
-#define SEGMENT_LENGTH 6000
+#define SEGMENT_LENGTH 10000
 #define SEGMENT_HALF_WIDTH 2000
-#define ASTEROID_NBR 400
+#define ASTEROID_NBR 300
 
 class Segment {
 	std::vector<Asteroid> asteroids;
@@ -19,20 +19,19 @@ class Segment {
 	Buffer buffer;
 
 	void generatePlaneVectors(const Vector3 &direction,
-                            Vector3 &planeVector1,
-                            Vector3 &planeVector2) const;
+								Vector3 &planeVector1,
+								Vector3 &planeVector2) const;
 
 
 
 	void generateAsteroidPosition(Asteroid & currentAsteroid,
-                                                const Vector3 & direction,
-                                                const Vector3 & width,
-                                                const Vector3 & height,
-                                                const Vector3 & start);
+									const Vector3 & direction,
+									const Vector3 & width,
+									const Vector3 & height,
+									const Vector3 & start);
 
-  bool detectOneAsteroidCollision(const Asteroid &a, const Asteroid &b) const;
-  bool detectAsteroidsCollision(const Asteroid &a,
-                                unsigned short aIndex) const;
+	bool detectOneAsteroidCollision(const Asteroid &a, const Asteroid &b) const;
+	bool detectAsteroidsCollision(const Asteroid &a, unsigned short aIndex) const;
 
 public:
 	Segment();

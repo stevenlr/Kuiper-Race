@@ -15,7 +15,7 @@
 #include "graphics/opengl/Sampler.h"
 
 #include "Level.h"
-#include <utility.h>
+#include "utility.h"
 
 Level::Level() :
 	currentSegmentIndex(0),
@@ -81,22 +81,6 @@ int Level::getSegmentCount() const
 	return segments.size();
 }
 
-void Level::generate_test()
-{
-	segments.push_back(new Segment());
-	segments.push_back(new Segment());
-	segments.push_back(new Segment());
-	segments.push_back(new Segment());
-	segments.push_back(new Segment());
-	segments.push_back(new Segment());
-
-	float i = 0;
-	for (Segment *seg : segments) {
-		seg->generate_test(Vector3 {i * 50, 0, 0}, Vector3());
-		i++;
-	}
-}
-
 void Level::update(float dt)
 {
 	if (win || dead) {
@@ -107,21 +91,18 @@ void Level::update(float dt)
 	currentSegmentTime = std::min(currentSegmentTime + dt, MAX_TIME_PER_SEGMENT);
 
 	if (currentSegmentTime >= MAX_TIME_PER_SEGMENT) {
-		LOGINFO << "timeout" << std::endl;
-		//die();
-		//return;
+		die();
+		return;
 	}
 
 	ship.update(dt);
 
 	if (shipCollidesWithAsteroids()) {
-		LOGINFO << "collision with asteroid" << std::endl;
 		die();
 		return;
 	}
 
 	if (shipCollidesWithCheckpoint()) {
-		LOGINFO << "checkpoint reached" << std::endl;
 		reachCheckpoint();
 	}
 }
@@ -261,12 +242,14 @@ bool Level::shipCollidesWithAsteroids()
 		}
 
 		Segment *seg = segments[i];
+
 		for (const Asteroid& ast : seg->getAsteroids()) {
 			const Vector3& asteroidPosition = ast.position;
 			float astDistX = ship.getPosition()[0] - asteroidPosition[0];
 			float astDistY = ship.getPosition()[1] - asteroidPosition[1];
 			float astDistZ = ship.getPosition()[2] - asteroidPosition[2];
 			float astMinDist = ship.getRadius() + ast.scale;
+
 			if (astDistX * astDistX + astDistY * astDistY + astDistZ * astDistZ <= astMinDist * astMinDist) {
 				return true;
 			}
@@ -296,13 +279,11 @@ void Level::die()
 
 void Level::reachCheckpoint()
 {
-	if (currentSegmentIndex == segments.size()) {
+	if (currentSegmentIndex == segments.size() - 1) {
 		win = true;
-		LOGINFO << "won" << std::endl;
 	} else {
 		currentSegmentIndex += 1;
 		currentSegmentTime = 0;
-		LOGINFO << "next segment" << std::endl;
 	}
 }
 
