@@ -10,7 +10,7 @@
 #include "Spaceship.h"
 
 #define MAX_TIME_PER_SEGMENT 12.f
-#define CHECKPOINT_RADIUS 5.f
+#define CHECKPOINT_RADIUS 500.f
 
 #define SEGMENT_NBR 8
 

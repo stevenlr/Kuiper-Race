@@ -16,6 +16,7 @@ public:
 	static std::map<std::string, Texture*> textures;
 	static Cubemap *cubemap;
 	static VertexArray *screenQuad;
+	static VertexArray *point;
 };
 
 #endif

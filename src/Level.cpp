@@ -177,6 +177,26 @@ void Level::draw(TransformPipeline& tp)
 		sphere.drawInstanced(n);
 	}
 
+	tp.saveModel();
+	tp.identity();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_ALWAYS);
+	ShaderProgram &checkpointShader = *Registry::shaders["checkpoint"];
+	checkpointShader.bind();
+	checkpointShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
+	checkpointShader["u_Position"].set3f(segments[currentSegmentIndex]->getCheckpoint());
+	/*Registry::point->bind();
+	Registry::point->drawArrays();
+	Registry::point->unbind();*/
+	Registry::models["planet"]->draw();
+	checkpointShader.unbind();
+	glDepthFunc(GL_LESS);
+	glDisable(GL_BLEND);
+	
+	tp.restoreModel();
+
 	ship.draw(tp);
 
 	tp.saveModel();

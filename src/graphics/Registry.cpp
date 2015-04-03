@@ -5,3 +5,4 @@ std::map<std::string, Mesh*> Registry::models;
 std::map<std::string, Texture*> Registry::textures;
 Cubemap *Registry::cubemap;
 VertexArray *Registry::screenQuad;
+VertexArray *Registry::point;

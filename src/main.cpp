@@ -162,6 +162,21 @@ static void initialize()
 	overlayShader->bindFragDataLocation("out_Color", 0);
 	overlayShader->link();
 	Registry::shaders["overlay"] = overlayShader;
+
+	// ----- Checkpoint -----
+
+	float pointCoords[] = {0, 0, 0};
+	VertexArray *pointVao = new VertexArray(VertexArray::Points, 1);
+	Buffer *pointCoordsBuffer = new Buffer(Buffer::Array, Buffer::StaticDraw);
+	pointCoordsBuffer->data(3 * sizeof(float), reinterpret_cast<const void*>(pointCoords));
+	pointVao->addAttrib(0, VertexAttrib(pointCoordsBuffer, 3, VertexAttrib::Float));
+	Registry::point = pointVao;
+
+	ShaderProgram *checkpointShader = new ShaderProgram("shaders/checkpoint.vert", "shaders/checkpoint.frag");
+	checkpointShader->bindAttribLocation("in_Position", 0);
+	checkpointShader->bindFragDataLocation("out_Color", 0);
+	checkpointShader->link();
+	Registry::shaders["checkpoint"] = checkpointShader;
 }
 
 static void update(float dt)
@@ -220,6 +235,7 @@ static void run(int argc, char *argv[])
 	glfwSwapInterval(1);
 
 	glClearColor(0, 0, 0, 1);
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
 	TransformPipeline tp;
 	tp.perspectiveProjection(70, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
