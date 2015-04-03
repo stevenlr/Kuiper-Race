@@ -7,15 +7,67 @@
 
 #include "Spaceship.h"
 
+Spaceship::Spaceship() :
+		forward({0, 1, 0}),
+		up({0, 0, 1}),
+		right({1, 0, 0}),
+		position({0, -50, 0}),
+		speed(0),
+		rotationSpeedY(0),
+		rotationSpeedX(0)
+{
+}
+
 void Spaceship::update(float dt)
 {
+	static const float acceleration = 120;
+	static const float rotationAccelerationY = 20;
+	static const float rotationAccelerationX = 20;
 	InputHandler &input = InputHandler::getInstance();
 
-	//if (input.keyIsDown(InputHandler::SpeedUp)) {
-	//	augmenter la vitesse
-	//}
+	speed *= 0.96; // Friction in space, suuuure...
 
-	// etc.
+	if (input.keyIsDown(InputHandler::SpeedUp)) {
+		speed += dt * acceleration;
+	}
+
+	if (input.keyIsDown(InputHandler::SpeedDown)) {
+		speed -= dt * acceleration;
+	}
+
+	rotationSpeedY *= 0.7;
+	rotationSpeedX *= 0.7;
+
+	if (input.keyIsDown(InputHandler::Left)) {
+		rotationSpeedY += dt * rotationAccelerationY;
+	}
+
+	if (input.keyIsDown(InputHandler::Right)) {
+		rotationSpeedY -= dt * rotationAccelerationY;
+	}
+
+	if (input.keyIsDown(InputHandler::Forward)) {
+		rotationSpeedX -= dt * rotationAccelerationX;
+	}
+
+	if (input.keyIsDown(InputHandler::Backward)) {
+		rotationSpeedX += dt * rotationAccelerationX;
+	}
+
+	float rotationY = dt * rotationSpeedY;
+	float rotationX = dt * rotationSpeedX;
+
+	right = right * cosf(rotationY) + up * sinf(rotationY);
+	right.normalize();
+	up = right.cross(forward);
+	up.normalize();
+
+	forward = forward * cosf(rotationX) + up * sinf(rotationX);
+	forward.normalize();
+	up = right.cross(forward);
+	up.normalize(); 
+
+	position += forward * speed;
 }
 
 void Spaceship::draw(TransformPipeline& tp)
@@ -27,6 +79,8 @@ void Spaceship::draw(TransformPipeline& tp)
 
 	tp.saveModel();
 	tp.identity();
+
+	tp.translation(position);
 
 	samplerMipmap.bind(1);
 	samplerMipmap.bind(2);
@@ -50,9 +104,13 @@ void Spaceship::draw(TransformPipeline& tp)
 
 void Spaceship::applyLookAt(TransformPipeline& tp)
 {
-	static Camera camera({-3, 0.5, 0.5});
-	camera.update();
-	tp.lookAt(camera);
+	static const float offsetForward = -7;
+	static const float offsetUpward = 2;
+
+	Vector3 cameraPosition = position + forward * offsetForward + up * offsetUpward;
+	Vector3 centerPosition = position + up * 1;
+
+	tp.lookAt(cameraPosition, centerPosition, up);
 }
 
 const Vector3& Spaceship::getPosition() const
@@ -60,13 +118,12 @@ const Vector3& Spaceship::getPosition() const
 	return position;
 }
 
-const Vector3& Spaceship::getSpeed() const
+Vector3 Spaceship::getSpeed() const
 {
-	return speed;
+	return forward * speed;
 }
 
 float Spaceship::getRadius() const
 {
 	return 1.f;
 }
-

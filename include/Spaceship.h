@@ -7,15 +7,23 @@ class TransformPipeline;
 
 class Spaceship {
 	Vector3 position;
-	Vector3 speed;
+	float speed;
+	float rotationSpeedY;
+	float rotationSpeedX;
+
+	Vector3 forward;
+	Vector3 up;
+	Vector3 right;
 
 public:
+	Spaceship();
+
 	void draw(TransformPipeline&);
 	void update(float dt);
 	void applyLookAt(TransformPipeline&);
 
 	const Vector3& getPosition() const;
-	const Vector3& getSpeed() const;
+	Vector3 getSpeed() const;
 	float getRadius() const;
 };
 

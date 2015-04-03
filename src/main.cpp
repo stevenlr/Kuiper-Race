@@ -41,8 +41,8 @@ static Level level;
 
 static void initialize()
 {
-	srand(0);
-	//srand(time(nullptr));
+	//srand(0);
+	srand(time(nullptr));
 
 	level.generate();
 

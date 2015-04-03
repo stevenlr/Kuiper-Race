@@ -24,60 +24,56 @@ Level::Level() :
 	dead(false),
 	win(false)
 {
-  segments.resize(SEGMENT_NBR);
+	segments.resize(SEGMENT_NBR);
 }
 
 Level::~Level()
 {
-  for (Segment* seg : segments) {
-    delete seg;
-  }
-  segments.clear();
+	for (Segment* seg : segments) {
+		delete seg;
+	}
+
+	segments.clear();
 }
 
 void Level::generateRandomDirection(Vector3 & direction) const
 {
-  for(unsigned char i=0; i<3; ++i)
-    direction[i]=Utility::generateMinus1_1Value();
+	for(int i = 0; i < 3; ++i)
+		direction[i] = Utility::generateMinus1_1Value();
 
-  direction.normalize();
-  direction*= SEGMENT_LENGTH;
+	direction.normalize();
+	direction *= SEGMENT_LENGTH;
 }
 
 void Level::generateTurn(Vector3 & direction) const
 {
-  float angle = Utility::generateMinus1_1Value() * PI / 2;
-  Vector3 newDirection;
+	float angle = Utility::generateMinus1_1Value() * PI / 2;
+	Vector3 newDirection;
 
-  newDirection[0]=direction[0]*std::cos(angle) - direction[1]*sin(angle);
-  newDirection[1]=direction[0]*std::sin(angle) + direction[1]*cos(angle);
+	newDirection[0] = direction[0] * std::cos(angle) - direction[1] * sin(angle);
+	newDirection[1] = direction[0] * std::sin(angle) + direction[1] * cos(angle);
 
-  angle = Utility::generateMinus1_1Value() * PI / 2;
-  direction[0]=newDirection[0];
-  direction[1]=newDirection[1]*std::cos(angle) - newDirection[2]*sin(angle);
-  direction[2]=newDirection[1]*std::sin(angle) + newDirection[2]*cos(angle);
-
+	angle = Utility::generateMinus1_1Value() * PI / 2;
+	direction[0] = newDirection[0];
+	direction[1] = newDirection[1] * std::cos(angle) - newDirection[2] * sin(angle);
+	direction[2] = newDirection[1] * std::sin(angle) + newDirection[2] * cos(angle);
 }
 
 void Level::generate()
 {
-  Vector3 currentPosition,
-          currentDirection;
+	Vector3 currentPosition, currentDirection({0, SEGMENT_LENGTH, 0});
 
-  generateRandomDirection(currentDirection);
-
-  for(int i=0; i<SEGMENT_NBR; ++i)
-  {
-    segments[i]=new Segment;
-    segments[i]->generate(currentPosition, currentPosition+currentDirection);
-    currentPosition+=currentDirection;
-    generateTurn(currentDirection);
-  }
+	for (int i = 0; i < SEGMENT_NBR; ++i) {
+		segments[i] = new Segment;
+		segments[i]->generate(currentPosition, currentPosition+currentDirection);
+		currentPosition += currentDirection;
+		generateTurn(currentDirection);
+	}
 }
 
 int Level::getSegmentCount() const
 {
-  return segments.size();
+	return segments.size();
 }
 
 void Level::generate_test()
@@ -96,6 +92,7 @@ void Level::generate_test()
 	}
 }
 
+// TODO remove comments
 void Level::update(float dt)
 {
 	if (win || dead) {
@@ -107,16 +104,16 @@ void Level::update(float dt)
 
 	if (currentSegmentTime >= MAX_TIME_PER_SEGMENT) {
 		LOGINFO << "timeout" << std::endl;
-		die();
-		return;
+		//die();
+		//return;
 	}
 
 	ship.update(dt);
 
 	if (shipCollidesWithAsteroids()) {
 		LOGINFO << "collision with asteroid" << std::endl;
-		die();
-		return;
+		//die();
+		//return;
 	}
 
 	if (shipCollidesWithCheckpoint()) {
@@ -234,13 +231,6 @@ void Level::drawHUD()
 
 bool Level::shipCollidesWithAsteroids()
 {
-	InputHandler &input = InputHandler::getInstance();
-	if (input.keyWasPressed(InputHandler::SpeedDown)) {
-		reachCheckpoint();
-	} else if (input.keyWasPressed(InputHandler::SpeedUp)) {
-		currentSegmentIndex--;
-	}
-
 	for (int i = currentSegmentIndex - 1; i < currentSegmentIndex + 2; ++i) {
 		if (i < 0 || i >= segments.size()) {
 			continue;
