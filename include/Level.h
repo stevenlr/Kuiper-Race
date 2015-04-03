@@ -31,6 +31,8 @@ public:
 	Level();
 	~Level();
 
+	float getShipSpeed();
+
 	void generate();
 	void generate_test();
 

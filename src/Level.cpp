@@ -36,6 +36,11 @@ Level::~Level()
 	segments.clear();
 }
 
+float Level::getShipSpeed()
+{
+	return ship.getSpeed().length();
+}
+
 void Level::generateRandomDirection(Vector3 & direction) const
 {
 	for(int i = 0; i < 3; ++i)
@@ -92,7 +97,6 @@ void Level::generate_test()
 	}
 }
 
-// TODO remove comments
 void Level::update(float dt)
 {
 	if (win || dead) {

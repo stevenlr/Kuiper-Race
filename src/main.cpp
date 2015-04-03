@@ -258,6 +258,9 @@ static void run(int argc, char *argv[])
 
 		update(1 / 60.);
 
+		float speed = level.getShipSpeed();
+		tp.perspectiveProjection(58 + speed * 1.2, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
+
 		framebuffer.bind(Framebuffer::DrawFramebuffer);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		draw(tp);
