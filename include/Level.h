@@ -12,7 +12,7 @@
 #define MAX_TIME_PER_SEGMENT 30.f
 #define CHECKPOINT_RADIUS 500.f
 
-#define SEGMENT_NBR 2
+#define SEGMENT_NBR 8
 
 class Level {
 	Spaceship ship;
