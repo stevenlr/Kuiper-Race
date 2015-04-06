@@ -237,31 +237,12 @@ void Level::draw(TransformPipeline& tp)
 void Level::drawHUD(int windowWidth, int windowHeight)
 {
 	static TransformPipeline tp;
+	static Sampler sampler(Sampler::MinLinear, Sampler::MagLinear, Sampler::Repeat);
 
 	float windowRatio = (float) windowWidth / windowHeight;
 	tp.orthographicProjection(-windowRatio, windowRatio, -1, 1, -10, 10);
 
-	float ratio = 1 - currentSegmentTime / MAX_TIME_PER_SEGMENT;
-	float width = 1.f / 3;
-	float height = 1.f / 30;
-	float borderx = 3.f / windowWidth;
-	float bordery = 3.f / windowHeight;
-	float x = 0.5 - width / 2;
-	float y = 0.95;
-	static Rectangle rectOut(x, y, width, height, .2, .2, .2);
-	static Rectangle rectIn(-1, -1, -1, -1, .9, .0, .0);
-	rectIn.setBounds(x + borderx, y + bordery, ratio * (width - 2 * borderx), height - 2 * bordery);
-
-	glDisable(GL_DEPTH_TEST);
-	Registry::shaders["overlay"]->bind();
-	rectOut.draw();
-	if (ratio > 0.5f
-		|| (ratio > 0.3f && (int) (time * 5) % 4 != 0)
-		|| (ratio <= 0.3f && (int) (time * 5) % 2 != 0)) {
-		rectIn.draw();
-	}
-	Registry::shaders["overlay"]->unbind();
-	glEnable(GL_DEPTH_TEST);
+	// ----- Arrow -----
 
 	Vector3 direction = segments[currentSegmentIndex]->getCheckpoint() - ship.getPosition();
 	direction.normalize();
@@ -294,10 +275,37 @@ void Level::drawHUD(int windowWidth, int windowHeight)
 		tp.rotation(rotAxis, -rotAngle);
 	}
 
+	Registry::textures["arrow-diffuse"]->bind(1);
+	sampler.bind(1);
+
 	Registry::shaders["arrow"]->bind();
 	(*Registry::shaders["arrow"])["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
 	Registry::models["arrow"]->draw();
 	Registry::shaders["arrow"]->unbind();
+
+	// ----- Time bar -----
+
+	float ratio = 1 - currentSegmentTime / MAX_TIME_PER_SEGMENT;
+	float width = 1.f / 3;
+	float height = 1.f / 30;
+	float borderx = 3.f / windowWidth;
+	float bordery = 3.f / windowHeight;
+	float x = 0.5 - width / 2;
+	float y = 0.95;
+	static Rectangle rectOut(x, y, width, height, .2, .2, .2);
+	static Rectangle rectIn(-1, -1, -1, -1, .9, .0, .0);
+	rectIn.setBounds(x + borderx, y + bordery, ratio * (width - 2 * borderx), height - 2 * bordery);
+
+	glDisable(GL_DEPTH_TEST);
+	Registry::shaders["overlay"]->bind();
+	rectOut.draw();
+	if (ratio > 0.5f
+		|| (ratio > 0.3f && (int) (time * 5) % 4 != 0)
+		|| (ratio <= 0.3f && (int) (time * 5) % 2 != 0)) {
+		rectIn.draw();
+	}
+	Registry::shaders["overlay"]->unbind();
+	glEnable(GL_DEPTH_TEST);
 }
 
 bool Level::shipCollidesWithAsteroids()

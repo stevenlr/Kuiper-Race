@@ -186,9 +186,16 @@ static void initialize()
 
 	ShaderProgram *arrowShader = new ShaderProgram("shaders/arrow.vert", "shaders/arrow.frag");
 	arrowShader->bindAttribLocation("in_Position", 0);
+	arrowShader->bindAttribLocation("in_TextureCoords", 2);
 	arrowShader->bindFragDataLocation("out_Color", 0);
 	arrowShader->link();
+
+	arrowShader->bind();
+	(*arrowShader)["u_DiffuseTexture"].set1i(1);
+	arrowShader->unbind();
+
 	Registry::shaders["arrow"] = arrowShader;
+	Registry::textures["arrow-diffuse"] = loadPngTexture("textures/arrow-diffuse.png", true);
 }
 
 static void update(float dt)

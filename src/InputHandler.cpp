@@ -18,15 +18,15 @@ InputHandler &InputHandler::getInstance()
 
 InputHandler::InputHandler()
 {
-	_configKey[Forward] = GLFW_KEY_Z;
+	_configKey[Forward] = GLFW_KEY_z;
 	_configKey[Backward] = GLFW_KEY_S;
 	_configKey[Left] = GLFW_KEY_Q;
 	_configKey[Right] = GLFW_KEY_D;
 	_configKey[Up] = GLFW_KEY_SPACE;
 	_configKey[Down] = GLFW_KEY_LEFT_SHIFT;
 	_configKey[Quit] = GLFW_KEY_ESCAPE;
-	_configKey[SpeedUp] = GLFW_KEY_RIGHT_SHIFT;
-	_configKey[SpeedDown] = GLFW_KEY_RIGHT_CONTROL;
+	_configKey[SpeedUp] = GLFW_KEY_I;
+	_configKey[SpeedDown] = GLFW_KEY_K;
 	_configKey[Restart] = GLFW_KEY_R;
 	_configKey[NewLevel] = GLFW_KEY_G;
 
