@@ -11,7 +11,7 @@
 
 #define SEGMENT_LENGTH 10000
 #define SEGMENT_HALF_WIDTH 2000
-#define ASTEROID_NBR 300
+#define ASTEROID_NBR 320
 
 class Segment {
 	std::vector<Asteroid> asteroids;
