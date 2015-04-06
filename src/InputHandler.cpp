@@ -18,7 +18,7 @@ InputHandler &InputHandler::getInstance()
 
 InputHandler::InputHandler()
 {
-	_configKey[Forward] = GLFW_KEY_z;
+	_configKey[Forward] = GLFW_KEY_Z;
 	_configKey[Backward] = GLFW_KEY_S;
 	_configKey[Left] = GLFW_KEY_Q;
 	_configKey[Right] = GLFW_KEY_D;

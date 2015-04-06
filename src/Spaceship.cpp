@@ -24,7 +24,7 @@ void Spaceship::restart() {
 
 void Spaceship::update(float dt)
 {
-	static const float acceleration = 50;
+	static const float acceleration = 70;
 	static const float rotationAccelerationY = 5;
 	static const float rotationAccelerationX = 5;
 	InputHandler &input = InputHandler::getInstance();

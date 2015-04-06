@@ -8,5 +8,5 @@ out vec4 out_Color;
 
 void main()
 {
-	out_Color = vec4(texture(u_DiffuseTexture, v_TextureCoords).rgb * vec3(0.4, 1, 0.4), 1);
+	out_Color = vec4(texture(u_DiffuseTexture, v_TextureCoords).rgb * vec3(0.2, 0.75, 0.2), 1);
 }

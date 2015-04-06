@@ -137,6 +137,7 @@ void Level::draw(TransformPipeline& tp)
 
 	Mesh &planet = *Registry::models["planet"];
 	ShaderProgram &planetShader = *Registry::shaders["planet"];
+	ShaderProgram &atmosphereShader = *Registry::shaders["planet-atmosphere"];
 
 	samplerMipmap.bind(1);
 	samplerMipmap.bind(2);
@@ -220,8 +221,8 @@ void Level::draw(TransformPipeline& tp)
 
 	tp.saveModel();
 	tp.identity();
-	tp.translation(10000, -30000, -3000);
-	tp.scale(6000);
+	tp.translation(1000, -75000, -3000);
+	tp.scale(14000);
 	planetShader.bind();
 	samplerMipmap.bind(1);
 	Registry::textures["planet"]->bind(1);
@@ -230,7 +231,24 @@ void Level::draw(TransformPipeline& tp)
 	planetShader["u_ViewMatrix"].setMatrix4(tp.getViewMatrix());
 	planetShader["u_ViewModelMatrix"].setMatrix4(tp.getViewModelMatrix());
 	planet.draw();
-	planetShader.unbind();
+
+	/*glEnable(GL_POLYGON_OFFSET_FILL);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE);
+	glPolygonOffset(-3, -3);
+	tp.scale(1.03);
+	atmosphereShader.bind();
+	atmosphereShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
+	atmosphereShader["u_NormalMatrix"].setMatrix3(tp.getNormalMatrix());
+	atmosphereShader["u_ViewMatrix"].setMatrix4(tp.getViewMatrix());
+	atmosphereShader["u_ViewModelMatrix"].setMatrix4(tp.getViewModelMatrix());
+	planet.draw();
+	atmosphereShader.unbind();
+	glPolygonOffset(0, 0);
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_BLEND);
+	glDisable(GL_POLYGON_OFFSET_FILL);*/
+
 	tp.restoreModel();
 }
 

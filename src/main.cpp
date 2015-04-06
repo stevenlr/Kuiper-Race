@@ -113,6 +113,18 @@ static void initialize()
 
 	Registry::shaders["planet"] = planetShader;
 
+	planetShader = new ShaderProgram("shaders/planet.vert", "shaders/atmosphere.frag");
+	planetShader->bindAttribLocation("in_Position", 0);
+	planetShader->bindAttribLocation("in_Normal", 1);
+	planetShader->bindAttribLocation("in_TextureCoords", 2);
+	planetShader->bindFragDataLocation("out_Color", 0);
+	planetShader->link();
+	planetShader->bind();
+	(*planetShader)["u_Texture"].set1i(1);
+	planetShader->unbind();
+
+	Registry::shaders["planet-atmosphere"] = planetShader;
+
 	// ----- Screen quad -----
 
 	float quadCoords[] = {0, 0, 1, 0, 1, 1, 0, 1};
@@ -297,7 +309,7 @@ static void run(int argc, char *argv[])
 		update(1 / 60.);
 
 		float speed = level.getShipSpeed();
-		tp.perspectiveProjection(58 + speed * 1.2, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
+		tp.perspectiveProjection(58 + speed * 0.9, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
 
 		framebuffer.bind(Framebuffer::DrawFramebuffer);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

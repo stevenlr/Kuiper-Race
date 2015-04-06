@@ -37,11 +37,9 @@ void main()
 	const vec3 specularColor = vec3(1, 1, 1);
 	float specularFactor = pow(max(0, dot(reflect(-v_LightDir, normal), normalize(v_Position))), 8) * specularIntensity;
 
-	vec3 color1 = vec3(0.4, 0.6, 0.9);
-	vec3 color2 = vec3(0.7, 0.9, 0.2);
-	vec3 colorPlanet = (color1 + color2) / 2;
+	vec3 colorPlanet = vec3(1, 1, 1);
 
-	float diffuseFactor2 = max(0, dot(v_LightDir, normal)) * 0.1;
+	float diffuseFactor2 = max(0, dot(v_LightDir, normal)) * 0.15;
 
 	vec3 emit = texture(u_EmitTexture, v_TextureCoords).rgb;
 
