@@ -16,7 +16,6 @@
 #include "graphics/opengl/Sampler.h"
 
 #include "Level.h"
-#include "Audio.h"
 #include "utility.h"
 
 Level::Level() :
@@ -25,6 +24,11 @@ Level::Level() :
 {
 	restart();
 	segments.resize(SEGMENT_NBR);
+}
+
+void Level::init()
+{
+	shipAudio = Audio::play("ship", 0.0, 1.0f, 0, 0, 0, true);
 }
 
 Level::~Level()
@@ -119,6 +123,8 @@ void Level::update(float dt)
 	}
 
 	ship.update(dt);
+	Audio::setGain(shipAudio, getShipSpeed() / 150);
+	Audio::setPitch(shipAudio, 0.85+ ship.getRotationSpeed() / 15);
 
 	if (getShipSpeed() > 0.1) {
 		hasStarted = true;
@@ -384,11 +390,11 @@ void Level::reachCheckpoint()
 {
 	if (currentSegmentIndex == segments.size() - 1) {
 		win = true;
-		Audio::play("checkpoint");
+		Audio::play("checkpoint", 0.4);
 	} else {
 		currentSegmentIndex += 1;
 		currentSegmentTime = 0;
-		Audio::play("checkpoint");
+		Audio::play("checkpoint", 0.4);
 	}
 }
 

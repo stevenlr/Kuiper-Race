@@ -164,3 +164,8 @@ float Spaceship::getRadius() const
 {
 	return 1.f;
 }
+
+float Spaceship::getRotationSpeed() const
+{
+	return fabs(rotationSpeedX) + fabs(rotationSpeedY);
+}

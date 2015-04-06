@@ -8,6 +8,7 @@
 
 #include "Segment.h"
 #include "Spaceship.h"
+#include "Audio.h"
 
 #define MAX_TIME_PER_SEGMENT 13.f
 #define CHECKPOINT_RADIUS 500.f
@@ -24,6 +25,7 @@ class Level {
 	bool dead;
 	bool win;
 	bool hasStarted;
+	SourceHandler shipAudio;
 
 	void generateRandomDirection(Vector3 & direction) const;
 	void generateTurn(Vector3 & direction) const;
@@ -35,6 +37,7 @@ public:
 
 	float getShipSpeed();
 
+	void init();
 	void generate();
 	void generate_test();
 	void restart();

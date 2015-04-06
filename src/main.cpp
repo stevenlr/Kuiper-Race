@@ -47,6 +47,7 @@ static void initialize()
 
 	Audio::initialize();
 	Audio::load("sounds/checkpoint.wav", "checkpoint");
+	Audio::load("sounds/ship.wav", "ship");
 
 	level.generate();
 
@@ -327,6 +328,8 @@ static void run(int argc, char *argv[])
 	bool running = true;
 	bool titleScreen = true;
 	float currentTime = glfwGetTime();
+
+	level.init();
 
 	while (running) {
 		float dt = glfwGetTime() - currentTime;

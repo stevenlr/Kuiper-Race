@@ -32,6 +32,7 @@ public:
 	const Vector3& getPosition() const;
 	Vector3 getSpeed() const;
 	float getRadius() const;
+	float getRotationSpeed() const;
 };
 
 #endif
