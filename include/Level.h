@@ -36,10 +36,6 @@ public:
 	void generate();
 	void generate_test();
 
-	int getSegmentCount() const;
-	int getCurrentSegment() const;
-	Vector3 getCheckpoint(int i) const;
-
 	void draw(TransformPipeline& tp);
 	void drawHUD(int windowWidth, int windowHeight);
 	void update(float dt);

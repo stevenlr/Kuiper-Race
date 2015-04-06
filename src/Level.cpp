@@ -79,11 +79,6 @@ void Level::generate()
 	}
 }
 
-int Level::getSegmentCount() const
-{
-	return segments.size();
-}
-
 void Level::update(float dt)
 {
 	if (win || dead) {
