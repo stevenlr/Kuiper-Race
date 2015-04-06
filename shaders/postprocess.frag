@@ -27,9 +27,9 @@ void main()
 	vec2 posG = (posCenter * (u_Width + 4) / u_Width + 1) / 2;
 	vec2 posB = v_Position;
 
-	float r = texture2D(u_Texture, posR).r;
-	float g = texture2D(u_Texture, posG).g;
-	float b = texture2D(u_Texture, posB).b;
+	float r = texture(u_Texture, posR).r;
+	float g = texture(u_Texture, posG).g;
+	float b = texture(u_Texture, posB).b;
 
 	color = vec3(r, g, b);
 
