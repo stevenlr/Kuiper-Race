@@ -53,42 +53,42 @@ int load_wav(const char *filename, struct wave_header *wave_header, void **audio
 	long filesize;
 
 	if (!filename || !wave_header || !audio_data) {
-		return -EINVAL;
+		return -1;
 	}
 
 	file = fopen(filename, "rb");
 	if (!file) {
-		return -errno;
+		return -1;
 	}
 
 	r = fread(wave_header, sizeof(struct wave_header), 1, file);
 	if (r != 1) {
-		ret = -EIO;
+		ret = -1;
 		goto fail;
 	}
 
 	if (strncmp(wave_header->header_id, "RIFF", 4)) {
-		ret = -ENOTSUP;
+		ret = -1;
 		goto fail;
 	}
 	if (strncmp(wave_header->format, "WAVE", 4)) {
-		ret = -ENOTSUP;
+		ret = -1;
 		goto fail;
 	}
 	if (strncmp(wave_header->format_id, "fmt", 3)) {
-		ret = -ENOTSUP;
+		ret = -1;
 		goto fail;
 	}
 	if (strncmp(wave_header->data_id, "data", 4)) {
-		ret = -ENOTSUP;
+		ret = -1;
 		goto fail;
 	}
 	if (wave_header->format_size != 16) {
-		ret = -ENOTSUP;
+		ret = -1;
 		goto fail;
 	}
 	if (wave_header->audio_format != 1) {
-		ret = -ENOTSUP;
+		ret = -1;
 		goto fail;
 	}
 
@@ -97,31 +97,31 @@ int load_wav(const char *filename, struct wave_header *wave_header, void **audio
 	fseek(file, sizeof(struct wave_header), SEEK_SET);
 
 	if (wave_header->data_size != filesize - sizeof(struct wave_header)) {
-		ret = -EIO;
+		ret = -1;
 		goto fail;
 	}
 
 	tmp_buffer = malloc(wave_header->data_size);
 	if (!tmp_buffer) {
-		ret = -ENOMEM;
+		ret = -1;
 		goto fail;
 	}
 
 	r = fread(tmp_buffer, wave_header->data_size, 1, file);
 	if (r != 1) {
-		ret = -EIO;
+		ret = -1;
 		goto fail;
 	}
 
 	*audio_data = tmp_buffer;
 	fclose(file);
 
-	return ret;
+	return 0;
 fail:
 	free(tmp_buffer);
 	fclose(file);
 
-	return ret;
+	return 1;
 }
 #ifdef __cplusplus
 }

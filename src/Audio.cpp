@@ -1,5 +1,6 @@
-#include "al.h"
-#include "alc.h"
+#include <al.h>
+#include <alc.h>
+#include <stdlib.h>
 
 #include "Audio.h"
 #include "Logger.h"
@@ -42,7 +43,7 @@ void Audio::initialize()
 		return;
 	}
 
-	for (unsigned i = 0; i < 8; i++) {
+	for (unsigned i = 0; i < 16; i++) {
 		ALuint source;
 		alGenSources(1, &source);
 		sources.push_back(source);
@@ -134,7 +135,7 @@ ALuint& Audio::getFreeSource()
 	ALuint source;
 	alGenSources(1, &source);
 	sources.push_back(source);
-	LOGWARNING << "new source" << std::endl;
+
 	return sources[sources.size() - 1];
 }
 
@@ -149,4 +150,3 @@ void Audio::play(const std::string& name, float x, float y, float z)
 	alSourcePlay(source);
 	audio_check_error();
 }
-

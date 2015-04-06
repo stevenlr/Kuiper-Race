@@ -384,11 +384,11 @@ void Level::reachCheckpoint()
 {
 	if (currentSegmentIndex == segments.size() - 1) {
 		win = true;
-		Audio::play("boom");
+		Audio::play("checkpoint");
 	} else {
 		currentSegmentIndex += 1;
 		currentSegmentTime = 0;
-		Audio::play("boom");
+		Audio::play("checkpoint");
 	}
 }
 

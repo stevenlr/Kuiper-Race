@@ -46,8 +46,7 @@ static void initialize()
 	srand(time(nullptr));
 
 	Audio::initialize();
-	Audio::load("sounds/boom.wav", "boom");
-	Audio::play("boom");
+	Audio::load("sounds/checkpoint.wav", "checkpoint");
 
 	level.generate();
 
