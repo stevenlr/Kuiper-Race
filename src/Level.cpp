@@ -238,6 +238,7 @@ void Level::drawHUD(int windowWidth, int windowHeight)
 	static Rectangle rectIn(-1, -1, -1, -1, .9, .0, .0);
 	rectIn.setBounds(x + borderx, y + bordery, ratio * (width - 2 * borderx), height - 2 * bordery);
 
+	glDisable(GL_DEPTH_TEST);
 	Registry::shaders["overlay"]->bind();
 	rectOut.draw();
 	if (ratio > 0.5f
@@ -246,6 +247,7 @@ void Level::drawHUD(int windowWidth, int windowHeight)
 		rectIn.draw();
 	}
 	Registry::shaders["overlay"]->unbind();
+	glEnable(GL_DEPTH_TEST);
 
 	Vector3 direction = segments[currentSegmentIndex]->getCheckpoint() - ship.getPosition();
 	direction.normalize();
