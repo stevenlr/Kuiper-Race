@@ -17,6 +17,8 @@ public:
 		Quit,
 		SpeedUp,
 		SpeedDown,
+		Restart,
+		NewLevel,
 
 		KEY_NB_ITEMS
 	};

@@ -25,9 +25,10 @@ InputHandler::InputHandler()
 	_configKey[Up] = GLFW_KEY_SPACE;
 	_configKey[Down] = GLFW_KEY_LEFT_SHIFT;
 	_configKey[Quit] = GLFW_KEY_ESCAPE;
-
 	_configKey[SpeedUp] = GLFW_KEY_RIGHT_SHIFT;
 	_configKey[SpeedDown] = GLFW_KEY_RIGHT_CONTROL;
+	_configKey[Restart] = GLFW_KEY_R;
+	_configKey[NewLevel] = GLFW_KEY_G;
 
 	_configMouseButton[Attack] = GLFW_MOUSE_BUTTON_LEFT;
 	_configMouseButton[Interact] = GLFW_MOUSE_BUTTON_RIGHT;

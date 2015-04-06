@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <algorithm>
+#include <iostream>
 
 #include "Logger.h"
 #include "InputHandler.h"
@@ -18,12 +19,9 @@
 #include "utility.h"
 
 Level::Level() :
-	currentSegmentIndex(0),
-	currentSegmentTime(0),
-	time(1000 * ((float) rand()) / RAND_MAX),
-	dead(false),
-	win(false)
+	time(1000 * ((float) rand()) / RAND_MAX)
 {
+	restart();
 	segments.resize(SEGMENT_NBR);
 }
 
@@ -79,16 +77,36 @@ void Level::generate()
 	}
 }
 
+void Level::restart() {
+	ship.restart();
+	currentSegmentIndex = 0;
+	currentTime = 0;
+	currentSegmentTime = 0;
+	win = false;
+	dead = false;
+}
+
 void Level::update(float dt)
 {
+	InputHandler &input = InputHandler::getInstance();
+	if (input.keyWasPressed(InputHandler::Restart)) {
+		restart();
+	}
+	if (input.keyWasPressed(InputHandler::NewLevel)) {
+		generate();
+		restart();
+	}
+
 	if (win || dead) {
 		return;
 	}
 
 	time += dt;
+	currentTime += dt;
 	currentSegmentTime = std::min(currentSegmentTime + dt, MAX_TIME_PER_SEGMENT);
 
 	if (currentSegmentTime >= MAX_TIME_PER_SEGMENT) {
+		std::cout << "Time out! Press R to restart." << std::endl;;
 		die();
 		return;
 	}
@@ -96,6 +114,7 @@ void Level::update(float dt)
 	ship.update(dt);
 
 	if (shipCollidesWithAsteroids()) {
+		std::cout << "Spaceship destroyed! press R to restart." << std::endl;;
 		die();
 		return;
 	}
@@ -327,6 +346,8 @@ void Level::die()
 void Level::reachCheckpoint()
 {
 	if (currentSegmentIndex == segments.size() - 1) {
+		std::cout << "You won! Total time: " << currentTime << "secs." << std::endl;
+		std::cout << "Press R to restart. Press G to generate a new level." << std::endl;
 		win = true;
 	} else {
 		currentSegmentIndex += 1;

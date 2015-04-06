@@ -7,15 +7,19 @@
 
 #include "Spaceship.h"
 
-Spaceship::Spaceship() :
-		forward({0, 1, 0}),
-		up({0, 0, 1}),
-		right({1, 0, 0}),
-		position({0, -20, 0}),
-		speed(0),
-		rotationSpeedY(0),
-		rotationSpeedX(0)
+Spaceship::Spaceship()
 {
+	restart();
+}
+
+void Spaceship::restart() {
+	forward = {0, 1, 0};
+	up = {0, 0, 1};
+	right = {1, 0, 0};
+	position = {0, -20, 0};
+	speed = 0;
+	rotationSpeedY = 0;
+	rotationSpeedX = 0;
 }
 
 void Spaceship::update(float dt)

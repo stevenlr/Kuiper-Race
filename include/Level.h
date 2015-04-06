@@ -19,6 +19,7 @@ class Level {
 	std::vector<Segment*> segments;
 	int currentSegmentIndex;
 	float currentSegmentTime;
+	float currentTime;
 	float time;
 	bool dead;
 	bool win;
@@ -35,6 +36,7 @@ public:
 
 	void generate();
 	void generate_test();
+	void restart();
 
 	void draw(TransformPipeline& tp);
 	void drawHUD(int windowWidth, int windowHeight);

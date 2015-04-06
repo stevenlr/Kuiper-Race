@@ -17,6 +17,7 @@ class Spaceship {
 
 public:
 	Spaceship();
+	void restart();
 
 	void draw(TransformPipeline& tp);
 	void update(float dt);
