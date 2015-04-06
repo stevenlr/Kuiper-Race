@@ -19,7 +19,8 @@
 #include "utility.h"
 
 Level::Level() :
-	time(1000 * ((float) rand()) / RAND_MAX)
+	time(1000 * ((float) rand()) / RAND_MAX),
+	hasStarted(false)
 {
 	restart();
 	segments.resize(SEGMENT_NBR);
@@ -84,6 +85,7 @@ void Level::restart() {
 	currentSegmentTime = 0;
 	win = false;
 	dead = false;
+	hasStarted = false;
 }
 
 void Level::update(float dt)
@@ -101,20 +103,24 @@ void Level::update(float dt)
 		return;
 	}
 
-	time += dt;
-	currentTime += dt;
-	currentSegmentTime = std::min(currentSegmentTime + dt, MAX_TIME_PER_SEGMENT);
+	if (hasStarted) {
+		time += dt;
+		currentTime += dt;
+		currentSegmentTime = std::min(currentSegmentTime + dt, MAX_TIME_PER_SEGMENT);
+	}
 
 	if (currentSegmentTime >= MAX_TIME_PER_SEGMENT) {
-		std::cout << "Time out! Press R to restart." << std::endl;;
 		die();
 		return;
 	}
 
 	ship.update(dt);
 
+	if (getShipSpeed() > 0.1) {
+		hasStarted = true;
+	}
+
 	if (shipCollidesWithAsteroids()) {
-		std::cout << "Spaceship destroyed! press R to restart." << std::endl;;
 		die();
 		return;
 	}
@@ -372,8 +378,6 @@ void Level::die()
 void Level::reachCheckpoint()
 {
 	if (currentSegmentIndex == segments.size() - 1) {
-		std::cout << "You won! Total time: " << currentTime << "secs." << std::endl;
-		std::cout << "Press R to restart. Press G to generate a new level." << std::endl;
 		win = true;
 	} else {
 		currentSegmentIndex += 1;
@@ -389,4 +393,9 @@ bool Level::isDead() const
 bool Level::isWin() const
 {
 	return win;
+}
+
+bool Level::hasCrashed() const
+{
+	return currentSegmentTime < MAX_TIME_PER_SEGMENT && dead;
 }

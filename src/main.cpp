@@ -208,6 +208,25 @@ static void initialize()
 
 	Registry::shaders["arrow"] = arrowShader;
 	Registry::textures["arrow-diffuse"] = loadPngTexture("textures/arrow-diffuse.png", true);
+
+	// ----- Screens -----
+
+	Registry::textures["screen-title"] = loadPngTexture("textures/screens/title.png", false);
+	Registry::textures["screen-won"] = loadPngTexture("textures/screens/won.png", false);
+	Registry::textures["screen-crashed"] = loadPngTexture("textures/screens/crashed.png", false);
+	Registry::textures["screen-timeout"] = loadPngTexture("textures/screens/time-out.png", false);
+	Registry::textures["screen-controls"] = loadPngTexture("textures/screens/controls.png", false);
+	Registry::textures["screen-level"] = loadPngTexture("textures/screens/level.png", false);
+
+	ShaderProgram *screenShader = new ShaderProgram("shaders/postprocess.vert", "shaders/screen.frag");
+	screenShader->bindAttribLocation("in_Position", 0);
+	screenShader->bindFragDataLocation("out_Color", 0);
+	screenShader->link();
+	screenShader->bind();
+	(*screenShader)["u_Texture"].set1i(1);
+	screenShader->unbind();
+
+	Registry::shaders["screen"] = screenShader;
 }
 
 static void update(float dt)
@@ -299,17 +318,29 @@ static void run(int argc, char *argv[])
 
 	Sampler samplerScreenquad(Sampler::MinLinear, Sampler::MagLinear, Sampler::ClampToEdge);
 
+	ShaderProgram *screenShader = Registry::shaders["screen"];
+
 	bool running = true;
+	bool titleScreen = true;
+	float currentTime = glfwGetTime();
+
 	while (running) {
+		float dt = glfwGetTime() - currentTime;
+		currentTime = glfwGetTime();
+
 		input.poll();
 
 		if (glfwWindowShouldClose(window) || input.keyWasPressed(InputHandler::Quit))
 			running = false;
 
-		update(1 / 60.);
+		update(dt);
 
 		float speed = level.getShipSpeed();
 		tp.perspectiveProjection(58 + speed * 0.9, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
+
+		if (speed > 0.1) {
+			titleScreen = false;
+		}
 
 		framebuffer.bind(Framebuffer::DrawFramebuffer);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -334,6 +365,46 @@ static void run(int argc, char *argv[])
 		glClear(GL_DEPTH_BUFFER_BIT);
 		level.drawHUD(WINDOW_WIDTH, WINDOW_HEIGHT);
 		glEnable(GL_CULL_FACE);
+
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		screenShader->bind();
+		samplerScreenquad.bind(1);
+		Registry::screenQuad->bind();
+
+		if (titleScreen) {
+			Registry::textures["screen-title"]->bind(1);
+			Registry::screenQuad->drawElements();
+
+			Registry::textures["screen-level"]->bind(1);
+			Registry::screenQuad->drawElements();
+
+			Registry::textures["screen-controls"]->bind(1);
+			Registry::screenQuad->drawElements();
+		} else if (level.isDead()) {
+			if (level.hasCrashed()) {
+				Registry::textures["screen-crashed"]->bind(1);
+				Registry::screenQuad->drawElements();
+			} else {
+				Registry::textures["screen-timeout"]->bind(1);
+				Registry::screenQuad->drawElements();
+			}
+
+			Registry::textures["screen-level"]->bind(1);
+			Registry::screenQuad->drawElements();
+		} else if (level.isWin()) {
+			Registry::textures["screen-won"]->bind(1);
+			Registry::screenQuad->drawElements();
+
+			Registry::textures["screen-level"]->bind(1);
+			Registry::screenQuad->drawElements();
+		}
+
+		Registry::screenQuad->unbind();
+		screenShader->unbind();
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
 
 		glfwSwapBuffers(window);
 	}

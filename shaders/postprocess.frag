@@ -62,7 +62,5 @@ void main()
 	float vignette = smoothstep(0, 1, mix(0.65, 1.45, 1 - dist));
 	color *= vignette;
 
-	color = pow(color, 2.2);
-
 	out_Color = vec4(color, 1);
 }

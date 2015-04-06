@@ -23,6 +23,7 @@ class Level {
 	float time;
 	bool dead;
 	bool win;
+	bool hasStarted;
 
 	void generateRandomDirection(Vector3 & direction) const;
 	void generateTurn(Vector3 & direction) const;
@@ -50,6 +51,7 @@ public:
 
 	bool isDead() const;
 	bool isWin() const;
+	bool hasCrashed() const;
 };
 
 #endif
