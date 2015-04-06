@@ -8,6 +8,7 @@
 #include "graphics/opengl/Buffer.h"
 
 #include "Asteroid.h"
+#include "Spaceship.h"
 
 #define SEGMENT_LENGTH 11000
 #define SEGMENT_HALF_WIDTH 2000
@@ -39,6 +40,7 @@ public:
 
 	void generate(Vector3 start, Vector3 end);
 	void generate_test(Vector3 start, Vector3 end);
+	void update(float dt, const Spaceship &ship);
 
 	Vector3 getCheckpoint() const;
 	const std::vector<Asteroid>& getAsteroids() const;

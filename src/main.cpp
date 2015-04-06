@@ -42,12 +42,12 @@ static Level level;
 
 static void initialize()
 {
-	//srand(0);
 	srand(time(nullptr));
 
 	Audio::initialize();
 	Audio::load("sounds/checkpoint.wav", "checkpoint");
 	Audio::load("sounds/ship.wav", "ship");
+	Audio::load("sounds/asteroid.wav", "asteroid");
 
 	level.generate();
 

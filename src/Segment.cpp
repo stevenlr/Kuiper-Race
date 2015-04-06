@@ -32,6 +32,13 @@ void Segment::generatePlaneVectors(const Vector3 &direction,
 	planeVector2 *= SEGMENT_HALF_WIDTH;
 }
 
+void Segment::update(float dt, const Spaceship &ship)
+{
+	for (Asteroid &ast : asteroids) {
+		ast.updateSound(ship);
+	}
+}
+
 bool Segment::detectOneAsteroidCollision(const Asteroid &a, const Asteroid &b) const
 {
 	Vector3 vectDistance = a.position - b.position;

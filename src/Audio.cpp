@@ -189,6 +189,7 @@ void Audio::setGain(const SourceHandler &handler, float gain)
 
 		if (source == handler.source && versions[i] == handler.version) {
 			alSourcef(source, AL_GAIN, gain);
+			return;
 		}
 
 		++i;
@@ -203,6 +204,41 @@ void Audio::setPitch(const SourceHandler &handler, float pitch)
 
 		if (source == handler.source && versions[i] == handler.version) {
 			alSourcef(source, AL_PITCH, pitch);
+			return;
+		}
+
+		++i;
+	}
+}
+
+void Audio::setPosition(const SourceHandler &handler, const Vector3 &pos)
+{
+	int i = 0;
+
+	for (auto& source : sources) {
+
+		if (source == handler.source && versions[i] == handler.version) {
+			alSource3f(source, AL_POSITION, pos[0], pos[1], pos[2]);
+			return;
+		}
+
+		++i;
+	}
+}
+
+void Audio::stop(SourceHandler &handler)
+{
+	int i = 0;
+
+	if (handler.version < 0)
+		return;
+
+	for (auto& source : sources) {
+		if (source == handler.source && versions[i] == handler.version) {
+			alSourceStop(handler.source);
+			handler.version = -1;
+			handler.source = 0;
+			return;
 		}
 
 		++i;

@@ -2,6 +2,7 @@
 #define SPACESHIP_H
 
 #include "maths/Vector.h"
+#include "maths/Matrix.h"
 
 class TransformPipeline;
 

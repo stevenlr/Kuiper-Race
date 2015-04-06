@@ -126,6 +126,15 @@ void Level::update(float dt)
 	Audio::setGain(shipAudio, getShipSpeed() / 150);
 	Audio::setPitch(shipAudio, 0.85+ ship.getRotationSpeed() / 15);
 
+	// Update asteroid sounds, unused
+	/*for (int i = currentSegmentIndex - 1; i < currentSegmentIndex + 2; ++i) {
+		if (i < 0 || i >= segments.size()) {
+			continue;
+		}
+
+		segments[i]->update(dt, ship);
+	}*/
+
 	if (getShipSpeed() > 0.1) {
 		hasStarted = true;
 	}

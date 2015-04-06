@@ -13,7 +13,7 @@
 struct SourceHandler {
 	SourceHandler() :
 			source(0),
-			version(0)
+			version(-1)
 	{}
 
 	SourceHandler(ALuint source, int version) :
@@ -50,6 +50,8 @@ public:
     						  bool loop = false);
     static void setGain(const SourceHandler &handler, float gain);
     static void setPitch(const SourceHandler &handler, float pitch);
+    static void stop(SourceHandler &handler);
+    static void setPosition(const SourceHandler &handler, const Vector3 &pos);
 };
 
 #endif
