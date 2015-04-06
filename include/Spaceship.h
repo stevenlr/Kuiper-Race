@@ -15,6 +15,10 @@ class Spaceship {
 	Vector3 up;
 	Vector3 right;
 
+	Vector3 forwardCam;
+	Vector3 upCam;
+	Vector3 rightCam;
+
 public:
 	Spaceship();
 	void restart();

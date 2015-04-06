@@ -16,6 +16,9 @@ void Spaceship::restart() {
 	forward = {0, 1, 0};
 	up = {0, 0, 1};
 	right = {1, 0, 0};
+	forwardCam = {0, 1, 0};
+	upCam = {0, 0, 1};
+	rightCam = {1, 0, 0};
 	position = {0, -20, 0};
 	speed = 0;
 	rotationSpeedY = 0;
