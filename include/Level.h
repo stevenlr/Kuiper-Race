@@ -9,10 +9,10 @@
 #include "Segment.h"
 #include "Spaceship.h"
 
-#define MAX_TIME_PER_SEGMENT 10.f
+#define MAX_TIME_PER_SEGMENT 13.f
 #define CHECKPOINT_RADIUS 500.f
 
-#define SEGMENT_NBR 16
+#define SEGMENT_NBR 10
 
 class Level {
 	Spaceship ship;
