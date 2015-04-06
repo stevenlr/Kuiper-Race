@@ -22,6 +22,7 @@ public:
 	void update(float dt);
 	void applyLookAt(TransformPipeline& tp);
 	void applyModelMatrix(TransformPipeline& tp);
+	Matrix4 getBaseMatrix();
 
 	const Vector3& getPosition() const;
 	Vector3 getSpeed() const;

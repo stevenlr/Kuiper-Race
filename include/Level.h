@@ -41,7 +41,7 @@ public:
 	Vector3 getCheckpoint(int i) const;
 
 	void draw(TransformPipeline& tp);
-	void drawHUD();
+	void drawHUD(int windowWidth, int windowHeight);
 	void update(float dt);
 
 	bool shipCollidesWithAsteroids();

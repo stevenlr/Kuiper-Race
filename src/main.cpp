@@ -179,6 +179,16 @@ static void initialize()
 	Registry::shaders["checkpoint"] = checkpointShader;
 
 	Registry::models["checkpoint"] = loadCobjModel("models/checkpoint.cobj");
+
+	// ----- Arrow -----
+
+	Registry::models["arrow"] = loadCobjModel("models/arrow.cobj");	
+
+	ShaderProgram *arrowShader = new ShaderProgram("shaders/arrow.vert", "shaders/arrow.frag");
+	arrowShader->bindAttribLocation("in_Position", 0);
+	arrowShader->bindFragDataLocation("out_Color", 0);
+	arrowShader->link();
+	Registry::shaders["arrow"] = arrowShader;
 }
 
 static void update(float dt)
@@ -242,6 +252,9 @@ static void run(int argc, char *argv[])
 	TransformPipeline tp;
 	tp.perspectiveProjection(70, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
 
+	TransformPipeline tpHud;
+	tpHud.orthographicProjection(-WINDOW_WIDTH / 2, WINDOW_WIDTH / 2, -WINDOW_HEIGHT / 2, WINDOW_HEIGHT / 2, -10, 10);
+
 	initialize();
 
 	Texture gbufferDiffuse(WINDOW_WIDTH, WINDOW_HEIGHT, Texture::RGBA8, Texture::RGB, Texture::UnsignedByte);
@@ -299,9 +312,8 @@ static void run(int argc, char *argv[])
 		Registry::screenQuad->unbind();
 		postprocessShader.unbind();
 
-		glDisable(GL_DEPTH_TEST);
-		level.drawHUD();
-		glEnable(GL_DEPTH_TEST);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		level.drawHUD(WINDOW_WIDTH, WINDOW_HEIGHT);
 		glEnable(GL_CULL_FACE);
 
 		glfwSwapBuffers(window);

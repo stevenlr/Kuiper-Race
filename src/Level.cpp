@@ -217,13 +217,18 @@ void Level::draw(TransformPipeline& tp)
 	tp.restoreModel();
 }
 
-void Level::drawHUD()
+void Level::drawHUD(int windowWidth, int windowHeight)
 {
+	static TransformPipeline tp;
+
+	float windowRatio = (float) windowWidth / windowHeight;
+	tp.orthographicProjection(-windowRatio, windowRatio, -1, 1, -10, 10);
+
 	float ratio = 1 - currentSegmentTime / MAX_TIME_PER_SEGMENT;
 	float width = 1.f / 3;
 	float height = 1.f / 30;
-	float borderx = 3.f / 1280;
-	float bordery = 3.f / 720;
+	float borderx = 3.f / windowWidth;
+	float bordery = 3.f / windowHeight;
 	float x = 0.5 - width / 2;
 	float y = 0.95;
 	static Rectangle rectOut(x, y, width, height, .2, .2, .2);
@@ -238,6 +243,42 @@ void Level::drawHUD()
 		rectIn.draw();
 	}
 	Registry::shaders["overlay"]->unbind();
+
+	Vector3 direction = segments[currentSegmentIndex]->getCheckpoint() - ship.getPosition();
+	direction.normalize();
+
+	Vector4 direction4;
+	direction4[0] = direction[0];
+	direction4[1] = direction[1];
+	direction4[2] = direction[2];
+	direction4[3] = 1;
+
+	Matrix4 spaceshipBaseMatrix = ship.getBaseMatrix();
+	spaceshipBaseMatrix.transpose();
+
+	direction4 = spaceshipBaseMatrix * direction4;
+
+	direction[0] = direction4[0];
+	direction[1] = direction4[1];
+	direction[2] = direction4[2];
+
+	tp.identity();
+	tp.translation(0, 0.7, 0);
+	tp.scale(0.35);
+
+	float rotAngle = acosf(direction.dot(Vector3({0, 0, 1})));
+
+	if (fabs(rotAngle) > 0.001) {
+		Vector3 rotAxis = direction.cross(Vector3({0, 0, 1}));
+		rotAxis.normalize();
+
+		tp.rotation(rotAxis, -rotAngle);
+	}
+
+	Registry::shaders["arrow"]->bind();
+	(*Registry::shaders["arrow"])["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
+	Registry::models["arrow"]->draw();
+	Registry::shaders["arrow"]->unbind();
 }
 
 bool Level::shipCollidesWithAsteroids()

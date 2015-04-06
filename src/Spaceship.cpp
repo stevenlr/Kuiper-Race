@@ -116,6 +116,11 @@ void Spaceship::applyLookAt(TransformPipeline& tp)
 
 void Spaceship::applyModelMatrix(TransformPipeline& tp)
 {
+	tp.setModel(tp.getModelMatrix() * getBaseMatrix());
+}
+
+Matrix4 Spaceship::getBaseMatrix()
+{
 	Matrix4 m;
 
 	for (int i = 0; i < 3; ++i) {
@@ -124,7 +129,7 @@ void Spaceship::applyModelMatrix(TransformPipeline& tp)
 		m(i, 2) = up[i];
 	}
 
-	tp.setModel(tp.getModelMatrix() * m);
+	return m;
 }
 
 const Vector3& Spaceship::getPosition() const
