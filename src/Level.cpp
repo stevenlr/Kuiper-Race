@@ -62,6 +62,9 @@ void Level::generateTurn(Vector3 & direction) const
 	direction[0] = newDirection[0];
 	direction[1] = newDirection[1] * std::cos(angle) - newDirection[2] * sin(angle);
 	direction[2] = newDirection[1] * std::sin(angle) + newDirection[2] * cos(angle);
+
+	direction.normalize();
+	direction *= SEGMENT_LENGTH;
 }
 
 void Level::generate()
