@@ -150,6 +150,8 @@ void Level::draw(TransformPipeline& tp)
 	samplerMipmap.bind(3);
 	samplerMipmap.bind(4);
 
+	// ----- Asteroids -----
+
 	tp.identity();
 	shader.bind();
 	shader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
@@ -182,7 +184,11 @@ void Level::draw(TransformPipeline& tp)
 		sphere.drawInstanced(n);
 	}
 
+	// ----- Spaceship -----
+
 	ship.draw(tp);
+
+	// ----- Cubemap -----
 
 	tp.saveModel();
 	tp.identity();
@@ -199,6 +205,8 @@ void Level::draw(TransformPipeline& tp)
 
 	tp.restoreModel();
 
+	// ----- Planet -----
+
 	tp.saveModel();
 	tp.identity();
 	tp.translation(1000, -75000, -3000);
@@ -213,6 +221,8 @@ void Level::draw(TransformPipeline& tp)
 	planet.draw();
 	tp.restoreModel();
 
+	// ----- Checkpoints -----
+
 	tp.saveModel();
 	tp.identity();
 
@@ -221,15 +231,26 @@ void Level::draw(TransformPipeline& tp)
 	ShaderProgram &checkpointShader = *Registry::shaders["checkpoint"];
 	checkpointShader.bind();
 	checkpointShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
-	checkpointShader["u_Position"].set3f(segments[currentSegmentIndex]->getCheckpoint());
 
+	checkpointShader["u_Position"].set3f(segments[currentSegmentIndex]->getCheckpoint());
+	checkpointShader["u_Color"].set3f(0, 0.35, 0);
+	Registry::models["checkpoint"]->draw();
 	glDepthFunc(GL_ALWAYS);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	Registry::models["checkpoint"]->draw();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDepthFunc(GL_LESS);
 
-	Registry::models["checkpoint"]->draw();
+	if (currentSegmentIndex + 1 < segments.size()) {
+		checkpointShader["u_Position"].set3f(segments[currentSegmentIndex + 1]->getCheckpoint());
+		checkpointShader["u_Color"].set3f(0.4, 0.2, 0);
+		Registry::models["checkpoint"]->draw();
+		glDepthFunc(GL_ALWAYS);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		Registry::models["checkpoint"]->draw();
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDepthFunc(GL_LESS);
+	}
 
 	checkpointShader.unbind();
 	glDisable(GL_BLEND);
