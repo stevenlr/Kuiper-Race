@@ -268,7 +268,7 @@ static void run(int argc, char *argv[])
 
 	InputHandler &input = InputHandler::getInstance();
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetKeyCallback(window, InputHandler::keyCallback);
 	glfwSetCursorPosCallback(window, InputHandler::mousePositionCallback);
 	glfwSetMouseButtonCallback(window, InputHandler::mouseButtonCallback);
