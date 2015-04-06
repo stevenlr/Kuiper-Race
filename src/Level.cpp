@@ -182,32 +182,6 @@ void Level::draw(TransformPipeline& tp)
 		sphere.drawInstanced(n);
 	}
 
-	tp.saveModel();
-	tp.identity();
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	ShaderProgram &checkpointShader = *Registry::shaders["checkpoint"];
-	checkpointShader.bind();
-	checkpointShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
-	checkpointShader["u_Position"].set3f(segments[currentSegmentIndex]->getCheckpoint());
-	/*Registry::point->bind();
-	Registry::point->drawArrays();
-	Registry::point->unbind();*/
-
-	glDepthFunc(GL_ALWAYS);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	Registry::models["checkpoint"]->draw();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDepthFunc(GL_LESS);
-
-	Registry::models["checkpoint"]->draw();
-
-	checkpointShader.unbind();
-	glDisable(GL_BLEND);
-	
-	tp.restoreModel();
-
 	ship.draw(tp);
 
 	tp.saveModel();
@@ -237,23 +211,28 @@ void Level::draw(TransformPipeline& tp)
 	planetShader["u_ViewMatrix"].setMatrix4(tp.getViewMatrix());
 	planetShader["u_ViewModelMatrix"].setMatrix4(tp.getViewModelMatrix());
 	planet.draw();
+	tp.restoreModel();
 
-	/*glEnable(GL_POLYGON_OFFSET_FILL);
+	tp.saveModel();
+	tp.identity();
+
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE);
-	glPolygonOffset(-3, -3);
-	tp.scale(1.03);
-	atmosphereShader.bind();
-	atmosphereShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
-	atmosphereShader["u_NormalMatrix"].setMatrix3(tp.getNormalMatrix());
-	atmosphereShader["u_ViewMatrix"].setMatrix4(tp.getViewMatrix());
-	atmosphereShader["u_ViewModelMatrix"].setMatrix4(tp.getViewModelMatrix());
-	planet.draw();
-	atmosphereShader.unbind();
-	glPolygonOffset(0, 0);
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	ShaderProgram &checkpointShader = *Registry::shaders["checkpoint"];
+	checkpointShader.bind();
+	checkpointShader["u_PvmMatrix"].setMatrix4(tp.getPVMMatrix());
+	checkpointShader["u_Position"].set3f(segments[currentSegmentIndex]->getCheckpoint());
+
+	glDepthFunc(GL_ALWAYS);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	Registry::models["checkpoint"]->draw();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDepthFunc(GL_LESS);
+
+	Registry::models["checkpoint"]->draw();
+
+	checkpointShader.unbind();
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);*/
 
 	tp.restoreModel();
 }
