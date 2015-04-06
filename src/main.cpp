@@ -31,6 +31,7 @@
 #include "maths/TransformPipeline.h"
 
 #include "Level.h"
+#include "Audio.h"
 
 using namespace std;
 
@@ -43,6 +44,10 @@ static void initialize()
 {
 	//srand(0);
 	srand(time(nullptr));
+
+	Audio::initialize();
+	Audio::load("sounds/boom.wav", "boom");
+	Audio::play("boom");
 
 	level.generate();
 
@@ -409,6 +414,7 @@ static void run(int argc, char *argv[])
 		glfwSwapBuffers(window);
 	}
 
+	Audio::cleanup();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }

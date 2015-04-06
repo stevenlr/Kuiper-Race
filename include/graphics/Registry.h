@@ -1,6 +1,7 @@
 #ifndef REGISTRY_H
 #define REGISTRY_H
 
+#include <string>
 #include <map>
 
 #include "graphics/opengl/ShaderProgram.h"

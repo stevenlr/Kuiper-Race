@@ -16,6 +16,7 @@
 #include "graphics/opengl/Sampler.h"
 
 #include "Level.h"
+#include "Audio.h"
 #include "utility.h"
 
 Level::Level() :
@@ -112,6 +113,7 @@ void Level::update(float dt)
 	}
 
 	if (currentSegmentTime >= MAX_TIME_PER_SEGMENT) {
+		Audio::play("boom");
 		die();
 		return;
 	}
@@ -123,6 +125,7 @@ void Level::update(float dt)
 	}
 
 	if (shipCollidesWithAsteroids()) {
+		Audio::play("boom");
 		die();
 		return;
 	}
@@ -381,9 +384,11 @@ void Level::reachCheckpoint()
 {
 	if (currentSegmentIndex == segments.size() - 1) {
 		win = true;
+		Audio::play("boom");
 	} else {
 		currentSegmentIndex += 1;
 		currentSegmentTime = 0;
+		Audio::play("boom");
 	}
 }
 
