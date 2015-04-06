@@ -75,6 +75,17 @@ void Spaceship::update(float dt)
 	up.normalize(); 
 
 	position += forward * speed;
+
+	static const float interpFactor = 0.12;
+
+	forwardCam = forward * interpFactor + forwardCam * (1 - interpFactor);
+	forwardCam.normalize();
+
+	rightCam = right * interpFactor + rightCam * (1 - interpFactor);
+	rightCam.normalize();
+
+	upCam = up * interpFactor + upCam * (1 - interpFactor);
+	upCam.normalize();
 }
 
 void Spaceship::draw(TransformPipeline& tp)
@@ -115,10 +126,10 @@ void Spaceship::applyLookAt(TransformPipeline& tp)
 	static const float offsetForward = -7;
 	static const float offsetUpward = 1;
 
-	Vector3 cameraPosition = position + forward * offsetForward + up * offsetUpward;
-	Vector3 centerPosition = position + up * 1;
+	Vector3 cameraPosition = position + forwardCam * offsetForward + upCam * offsetUpward;
+	Vector3 centerPosition = position + upCam * 1;
 
-	tp.lookAt(cameraPosition, centerPosition, up);
+	tp.lookAt(cameraPosition, centerPosition, upCam);
 }
 
 void Spaceship::applyModelMatrix(TransformPipeline& tp)
