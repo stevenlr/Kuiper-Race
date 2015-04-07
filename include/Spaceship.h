@@ -11,6 +11,7 @@ class Spaceship {
 	float speed;
 	float rotationSpeedY;
 	float rotationSpeedX;
+	float rotationSpeedZ;
 
 	Vector3 forward;
 	Vector3 up;

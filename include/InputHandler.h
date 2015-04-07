@@ -19,6 +19,8 @@ public:
 		SpeedDown,
 		Restart,
 		NewLevel,
+		YawRight,
+		YawLeft,
 
 		KEY_NB_ITEMS
 	};
