@@ -4,6 +4,7 @@ project(KuiperRace)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -I/opt/X11/include")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLEW_STATIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLEW_STATIC")
 
 LINK_DIRECTORIES("~/local_install/lib")
 LINK_DIRECTORIES("/usr/local/lib")
@@ -26,7 +27,8 @@ find_package(OpenAL)
 if (OPENAL_FOUND)
    include_directories(${OPENAL_INCLUDE_DIR})
 else (OPENAL_FOUND)
-   message("OpenAL environment missing")
+   message("OpenAL environment missing, forcing it")
+   set(OPENAL_LIBRARIES "/usr/lib/x86_64-linux-gnu/libopenal.so.1")
 endif (OPENAL_FOUND)
 
 set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:$ENV{HOME}/local_install/lib/pkgconfig")
@@ -38,3 +40,4 @@ include_directories(include)
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 add_executable(KuiperRace ${SOURCES})
 target_link_libraries(KuiperRace ${GL_LIBRARIES} ${GLFW3_STATIC_LIBRARIES} z png ${OPENAL_LIBRARIES})
+
