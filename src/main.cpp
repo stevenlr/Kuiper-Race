@@ -48,6 +48,9 @@ static void initialize()
 	Audio::load("sounds/checkpoint.wav", "checkpoint");
 	Audio::load("sounds/ship.wav", "ship");
 	Audio::load("sounds/asteroid.wav", "asteroid");
+	Audio::load("sounds/explosion.wav", "explosion");
+	Audio::load("sounds/timeout.wav", "timeout");
+	Audio::load("sounds/ding.wav", "ding");
 
 	level.generate();
 
@@ -199,7 +202,7 @@ static void initialize()
 
 	// ----- Arrow -----
 
-	Registry::models["arrow"] = loadCobjModel("models/arrow.cobj");	
+	Registry::models["arrow"] = loadCobjModel("models/arrow.cobj");
 
 	ShaderProgram *arrowShader = new ShaderProgram("shaders/arrow.vert", "shaders/arrow.frag");
 	arrowShader->bindAttribLocation("in_Position", 0);

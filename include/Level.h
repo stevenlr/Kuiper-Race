@@ -25,6 +25,7 @@ class Level {
 	bool dead;
 	bool win;
 	bool hasStarted;
+	bool didding;
 	SourceHandler shipAudio;
 
 	void generateRandomDirection(Vector3 & direction) const;

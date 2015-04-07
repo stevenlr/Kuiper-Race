@@ -20,7 +20,8 @@
 
 Level::Level() :
 	time(1000 * ((float) rand()) / RAND_MAX),
-	hasStarted(false)
+	hasStarted(false),
+	didding(false)
 {
 	restart();
 	segments.resize(SEGMENT_NBR);
@@ -56,8 +57,6 @@ void Level::generateRandomDirection(Vector3 & direction) const
 
 void Level::generateTurn(Vector3 & direction) const
 {
-	static const float angleThreshold = 0.71; // sqrt(2) / 2
-
 	float angle = Utility::generateMinus1_1Value() * PI / 4;
 	Vector3 newDirection;
 
@@ -120,7 +119,7 @@ void Level::update(float dt)
 	}
 
 	if (currentSegmentTime >= MAX_TIME_PER_SEGMENT) {
-		Audio::play("boom");
+		Audio::play("timeout", 0.5);
 		die();
 		return;
 	}
@@ -143,7 +142,7 @@ void Level::update(float dt)
 	}
 
 	if (shipCollidesWithAsteroids()) {
-		Audio::play("boom");
+		Audio::play("explosion", 0.2);
 		die();
 		return;
 	}
@@ -347,9 +346,13 @@ void Level::drawHUD(int windowWidth, int windowHeight)
 	Registry::shaders["overlay"]->bind();
 	rectOut.draw();
 	if (ratio > 0.5f
-		|| (ratio > 0.3f && (int) (time * 5) % 4 != 0)
-		|| (ratio <= 0.3f && (int) (time * 5) % 2 != 0)) {
+		|| (ratio > 0.2f && (int) (time * 5) % 4 != 0)
+		|| (ratio <= 0.2f && (int) (time * 5) % 2 != 0)) {
 		rectIn.draw();
+		didding = false;
+	} else if (!didding) {
+		Audio::play("ding", 0.2);
+		didding = true;
 	}
 	Registry::shaders["overlay"]->unbind();
 	glEnable(GL_DEPTH_TEST);
