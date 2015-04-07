@@ -72,7 +72,7 @@ void Spaceship::update(float dt)
 	forward = forward * cosf(rotationX) + up * sinf(rotationX);
 	forward.normalize();
 	up = right.cross(forward);
-	up.normalize(); 
+	up.normalize();
 
 	position += forward * speed;
 
