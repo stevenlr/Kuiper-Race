@@ -75,8 +75,11 @@ void Level::generateTurn(Vector3 & direction) const
 
 void Level::generate()
 {
-	Vector3 currentPosition, currentDirection({0, SEGMENT_LENGTH, 0});
+	for (Segment* seg : segments) {
+		delete seg;
+	}
 
+	Vector3 currentPosition, currentDirection({0, SEGMENT_LENGTH, 0});
 	for (int i = 0; i < SEGMENT_NBR; ++i) {
 		segments[i] = new Segment;
 		segments[i]->generate(currentPosition, currentPosition+currentDirection);
