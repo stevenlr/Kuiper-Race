@@ -20,27 +20,30 @@ class Segment {
 	Buffer buffer;
 
 	void generatePlaneVectors(const Vector3 &direction,
-								Vector3 &planeVector1,
-								Vector3 &planeVector2) const;
+							  Vector3 &planeVector1,
+							  Vector3 &planeVector2) const;
 
 
 
 	void generateAsteroidPosition(Asteroid & currentAsteroid,
-									const Vector3 & direction,
-									const Vector3 & width,
-									const Vector3 & height,
-									const Vector3 & start);
+								  const Vector3 & direction,
+								  const Vector3 & width,
+								  const Vector3 & height,
+								  const Vector3 & start);
 
+	void overwriteAsteroid(unsigned short asteroidIndex);
 	bool detectOneAsteroidCollision(const Asteroid &a, const Asteroid &b) const;
 	bool detectAsteroidsCollision(const Asteroid &a, unsigned short aIndex) const;
 
-public:
+	public:
 	Segment();
 	~Segment();
 
 	void generate(Vector3 start, Vector3 end);
 	void generate_test(Vector3 start, Vector3 end);
 	void update(float dt, const Spaceship &ship);
+	void sendDataBuffer();
+	void removeTurnCollisions(Segment & previousSegment);
 
 	Vector3 getCheckpoint() const;
 	const std::vector<Asteroid>& getAsteroids() const;

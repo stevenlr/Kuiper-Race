@@ -79,9 +79,15 @@ void Level::generate()
 	}
 
 	Vector3 currentPosition, currentDirection({0, SEGMENT_LENGTH, 0});
-	for (int i = 0; i < SEGMENT_NBR; ++i) {
+	segments[0] = new Segment;
+	segments[0]->generate(currentPosition, currentPosition+currentDirection);
+	currentPosition += currentDirection;
+	generateTurn(currentDirection);
+
+	for (int i = 1; i < SEGMENT_NBR; ++i) {
 		segments[i] = new Segment;
 		segments[i]->generate(currentPosition, currentPosition+currentDirection);
+		segments[i]->removeTurnCollisions(*(segments[i-1]));
 		currentPosition += currentDirection;
 		generateTurn(currentDirection);
 	}
@@ -130,12 +136,12 @@ void Level::update(float dt)
 
 	// Update asteroid sounds, unused
 	/*for (int i = currentSegmentIndex - 1; i < currentSegmentIndex + 2; ++i) {
-		if (i < 0 || i >= segments.size()) {
-			continue;
-		}
+	  if (i < 0 || i >= segments.size()) {
+	  continue;
+	  }
 
-		segments[i]->update(dt, ship);
-	}*/
+	  segments[i]->update(dt, ship);
+	  }*/
 
 	if (getShipSpeed() > 0.1) {
 		hasStarted = true;
