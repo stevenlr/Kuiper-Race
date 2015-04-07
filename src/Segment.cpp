@@ -87,10 +87,7 @@ void Segment::removeTurnCollisions(Segment & previousSegment)
 			}
 		}
 	}
-
-
 }
-
 
 void Segment::generate(Vector3 start, Vector3 end)
 {
