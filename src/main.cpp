@@ -295,16 +295,20 @@ static void run(int argc, char *argv[])
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
+	int width, height;
+
+	glfwGetFramebufferSize(window, &width, &height);
+
 	TransformPipeline tp;
-	tp.perspectiveProjection(70, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
+	tp.perspectiveProjection(70, width, WINDOW_HEIGHT, 0.1f, 100000);
 
 	TransformPipeline tpHud;
-	tpHud.orthographicProjection(-WINDOW_WIDTH / 2, WINDOW_WIDTH / 2, -WINDOW_HEIGHT / 2, WINDOW_HEIGHT / 2, -10, 10);
+	tpHud.orthographicProjection(-width / 2, width / 2, -height / 2, height / 2, -10, 10);
 
 	initialize();
 
-	Texture gbufferDiffuse(WINDOW_WIDTH, WINDOW_HEIGHT, Texture::RGBA8, Texture::RGB, Texture::UnsignedByte);
-	Texture gbufferDepth(WINDOW_WIDTH, WINDOW_HEIGHT, Texture::DepthComponent32f, Texture::Depth, Texture::Float);
+	Texture gbufferDiffuse(width, height, Texture::RGBA8, Texture::RGB, Texture::UnsignedByte);
+	Texture gbufferDepth(width, height, Texture::DepthComponent32f, Texture::Depth, Texture::Float);
 
 	Framebuffer framebuffer;
 	framebuffer.bind(Framebuffer::DrawFramebuffer);
@@ -320,8 +324,8 @@ static void run(int argc, char *argv[])
 	postprocessShader.bind();
 	postprocessShader["u_Texture"].set1i(1);
 	postprocessShader["u_Depth"].set1i(2);
-	postprocessShader["u_Width"].set1f(WINDOW_WIDTH);
-	postprocessShader["u_Height"].set1f(WINDOW_HEIGHT);
+	postprocessShader["u_Width"].set1f(width);
+	postprocessShader["u_Height"].set1f(height);
 	postprocessShader.unbind();
 
 	Sampler samplerScreenquad(Sampler::MinLinear, Sampler::MagLinear, Sampler::ClampToEdge);
@@ -346,7 +350,7 @@ static void run(int argc, char *argv[])
 		update(dt);
 
 		float speed = level.getShipSpeed();
-		tp.perspectiveProjection(58 + speed * 0.9, WINDOW_WIDTH, WINDOW_HEIGHT, 0.1f, 100000);
+		tp.perspectiveProjection(58 + speed * 0.9, width, height, 0.1f, 100000);
 
 		if (speed > 0.1) {
 			titleScreen = false;
@@ -373,7 +377,7 @@ static void run(int argc, char *argv[])
 		postprocessShader.unbind();
 
 		glClear(GL_DEPTH_BUFFER_BIT);
-		level.drawHUD(WINDOW_WIDTH, WINDOW_HEIGHT);
+		level.drawHUD(width, height);
 		glEnable(GL_CULL_FACE);
 
 		glDisable(GL_DEPTH_TEST);
